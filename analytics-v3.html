@@ -1,0 +1,619 @@
+ <!doctype html>
+<html lang="en">
+   <head>
+      <!-- Required meta tags -->
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <title>Community Application</title>
+      <link rel="icon" type="image/svg+xml" href="favicon_io/favicon.svg">
+      <link rel="icon" type="image/png" href="favicon_io/favicon.png">
+      <!-- Bootstrap CSS -->
+      <link rel="stylesheet" href="css/bootstrap.min.css">
+      <!-- Typography CSS -->
+      <link rel="stylesheet" href="css/typography.css">
+      <!-- Style CSS -->
+      <!-- <link rel="stylesheet" href="css/style.css"> -->
+      <link rel="stylesheet" href="css/style.css">
+      <!-- <link rel="stylesheet" href="css/custom.css"> -->
+      <link rel="stylesheet" href="css/custom.css">
+      <link rel="stylesheet" href="css/screening.css">
+
+      <!-- Responsive CSS -->
+      <link rel="stylesheet" href="css/responsive.css">
+
+  <style id="compiled-css" type="text/css">
+    .main-wrapper{
+      height:100%;
+    }
+    #container, #container2 {
+    height: 50% !important;
+    width: 100%;
+}
+.highcharts-figure{
+   height: 100%;
+   max-width:100%;
+}
+.highcharts-exporting-group{
+   display: none !important;
+}
+.analytics-border-new{
+   width: 100%;
+   height: calc(100vh - 150px);
+}
+    .selectors-container {
+    background: #f2f2f2;
+    margin-bottom: 1rem;
+    font-size: 0;
+}
+
+.selectors-container .col {
+    font-size: 1.2rem;
+    width: calc(50% - 1em);
+    padding: 0.5em;
+    display: inline-block;
+}
+
+.selectors-container select {
+    width: 100%;
+    font-size: 16px; /* prevent page zoom in iOS */
+}
+
+@media (max-width: 768px) {
+    .selectors-container .col {
+        display: block;
+        width: calc(100% - 1em);
+    }
+}
+.highcharts-range-selector-buttons {
+    display: none !important;
+}
+.highcharts-input-group {
+  display: none !important;
+}
+
+    /* EOS */
+  </style>
+  <script id="insert"></script>
+
+    <script src="/js/stringify.js?30594d192e5fceafdceeb7fb2522fd17c2a709ba" charset="utf-8"></script>
+    <script>
+      const customConsole = (w) => {
+        const pushToConsole = (payload, type) => {
+          w.parent.postMessage({
+            console: {
+              payload: stringify(payload),
+              type:    type
+            }
+          }, "*")
+        }
+
+        w.onerror = (message, url, line, column) => {
+          // the line needs to correspond with the editor panel
+          // unfortunately this number needs to be altered every time this view is changed
+          line = line - 70
+          if (line < 0){
+            pushToConsole(message, "error")
+          } else {
+            pushToConsole(`[${line}:${column}] ${message}`, "error")
+          }
+        }
+
+        let console = (function(systemConsole){
+          return {
+            log: function(){
+              let args = Array.from(arguments)
+              pushToConsole(args, "log")
+              systemConsole.log.apply(this, args)
+            },
+            info: function(){
+              let args = Array.from(arguments)
+              pushToConsole(args, "info")
+              systemConsole.info.apply(this, args)
+            },
+            warn: function(){
+              let args = Array.from(arguments)
+              pushToConsole(args, "warn")
+              systemConsole.warn.apply(this, args)
+            },
+            error: function(){
+              let args = Array.from(arguments)
+              pushToConsole(args, "error")
+              systemConsole.error.apply(this, args)
+            },
+            system: function(arg){
+              pushToConsole(arg, "system")
+            },
+            clear: function(){
+              systemConsole.clear.apply(this, {})
+            },
+            time: function(){
+              let args = Array.from(arguments)
+              systemConsole.time.apply(this, args)
+            },
+            assert: function(assertion, label){
+              if (!assertion){
+                pushToConsole(label, "log")
+              }
+
+              let args = Array.from(arguments)
+              systemConsole.assert.apply(this, args)
+            }
+          }
+        }(window.console))
+
+        window.console = { ...window.console, ...console }
+
+        console.system("Running fiddle")
+      }
+
+      if (window.parent){
+        customConsole(window)
+      }
+    </script>
+
+   </head>
+   <body class="sidebar-main-menu">
+
+
+    <script src="https://code.highcharts.com/stock/highstock.js"></script>
+<script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/stock/indicators/indicators-all.js"></script>
+<script src="https://code.highcharts.com/stock/modules/accessibility.js"></script>
+      <!-- loader Start -->
+      <div id="loading">
+         <div id="loading-center">
+         </div>
+      </div>
+      <!-- loader END -->
+      <!-- Wrapper Start -->
+      <div class="wrapper">
+
+         <!-- Sidebar  -->
+         <div class="iq-sidebar">
+            <div class="iq-sidebar-logo d-flex justify-content-between">
+               <a href="#">
+               <img src="images/logo_dark.webp" class="img-fluid" alt="">
+               <span></span>
+               </a>
+               <div class="iq-menu-bt-sidebar">
+                  <div class="iq-menu-bt align-self-center">
+                     <div class="wrapper-menu">
+                        <div class="main-circle"><i class="fa fa-ellipsis-h ft-12"></i></div>
+                        <div class="hover-circle"><i class="fa fa-ellipsis-v ft-12"></i></div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div id="sidebar-scrollbar">
+               <nav class="iq-sidebar-menu">
+                  <ul id="iq-sidebar-toggle" class="iq-menu">
+                     <li class="iq-menu-title"><i class="fa fa-minus ft-12"></i><span>Menu</span></li>
+                     <li class="">
+                        <a href="#" class="iq-waves-effect"><i class="ft-12 fa fa-tachometer"></i><span>Dashboard</span></a>
+                     </li>
+                     <li>
+                        <a href="#" class="iq-waves-effect"><i class="ft-12 fa fa-user"></i><span>Patient</span></a>
+                     </li>
+                     <li>
+                        <a href="#" class="iq-waves-effect"><i class="ft-12 fa fa-comment"></i><span>Chat</span></a>
+                     </li>
+                     <li>
+                        <a href="#" class="iq-waves-effect"><i class="ft-12 fa fa-user-md"></i><span>Admin</span></a>
+                     </li>
+                     <li>
+                        <a href="#" class="iq-waves-effect"><i class="fa fa-calendar"></i><span>Calendar</span></a>
+                     </li>
+                     <li>
+                        <a href="#" class="iq-waves-effect"><i class="ft-12 fa fa-line-chart"></i><span>Analytics</span></a>
+                        <!-- <a ui-sref="" class="iq-waves-effect sidemenu_sub" href="">
+                           <span class="sidemenu_subactive"> 
+                              <i class="fa fa-angle-down" aria-hidden="true"></i> 
+                              Demographics
+                           </span>
+                        </a> -->
+                        <style>
+                           .sidemenu_sub{
+                              padding: 0px 0px 15px 40px !important;
+                              border-radius: 0px !important;
+                           }
+                           .sidemenu_sub i{
+                              transform: rotate(270deg);
+                               width: auto !important;
+                               line-height: 15px !important;
+                           }
+                           .sidemenu_sub span{
+                              padding: 5px 5px !important;
+                              width: 100% !important;
+                           }
+                           .sidemenu_subactive{
+                              background: var(--theme-light) !important;
+                              color: var(--theme-dark) !important;
+                           }
+                        </style>
+                     </li>
+                  </ul>
+               </nav>
+               <div class="p-3"></div>
+            </div>
+         </div>
+         <!-- Page Content  -->
+         <div id="content-page" class="content-page">
+            <!-- TOP Nav Bar -->
+            <div class="iq-top-navbar header-top-sticky">
+               <div class="iq-navbar-custom">
+                  <div class="iq-sidebar-logo">
+                     <div class="top-logo">
+                        <a href="index.html" class="logo">
+                        <img src="images/logo.png" class="img-fluid" alt="">
+                        <span></span>
+                        </a>
+                     </div>
+                  </div>
+                  <nav class="navbar navbar-expand-lg navbar-light p-0">
+                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                     <i class="ri-menu-3-line"></i>
+                     </button>
+                     <div class="iq-menu-bt align-self-center">
+                        <div class="wrapper-menu">
+                           <div class="main-circle"><i class="ri-more-fill"></i></div>
+                           <div class="hover-circle"><i class="ri-more-2-fill"></i></div>
+                        </div>
+                     </div>
+                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav ml-auto navbar-list">
+                           <li class="nav-item">
+                              <a href="#" class="search-toggle iq-waves-effect">
+                              <i class="fa fa-bell"></i>
+                              <span class="bg-danger dots"></span>
+                              </a>
+                              <div class="iq-sub-dropdown">
+                                 <div class="iq-card shadow-none m-0">
+                                    <div class="iq-card-body p-0 ">
+                                       <div class="bg-primary p-3">
+                                          <h5 class="mb-0 text-white">All Notifications<small class="badge  badge-light float-right pt-1">4</small></h5>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div>
+                           </li>
+                           <li class="nav-item dropdown">
+                              <a href="#" class="search-toggle">
+                              <i class="fa fa-video-camera"></i>
+                              
+                              </a>
+                           </li>
+                        </ul>
+                     </div>
+                     <ul class="navbar-list">
+                        <li>
+                           <a href="#" class="search-toggle iq-waves-effect d-flex align-items-center">
+                              <img src="images/user/1.jpg" class="img-fluid rounded mr-3" alt="user">
+                              <div class="caption">
+                                 <span class="font-size-12">Nurse User</span>
+                                 <h6 class="mb-0 line-height">Nurse specialist</h6>
+                              </div>
+                           </a>
+                        </li>
+                     </ul>
+                  </nav>
+               </div>
+            </div>
+            <!-- TOP Nav Bar END -->
+            <div class="container-fluid">
+               <div class="row">
+                  <div class="col-sm-12 col-lg-12">
+                     <div class="iq-card">
+                        <div class="iq-card-body analytics-border-new">
+                          <div class="main-wrapper">
+<div id="container2" style="min-width: 310px; height: 400px; margin: 0px auto; overflow: hidden;" data-highcharts-chart="1" aria-hidden="false" role="region" aria-label="HbA1c Levels of Patients. Highcharts interactive chart."><div id="highcharts-screen-reader-region-before-1" aria-hidden="false" style="position: relative;"><div aria-hidden="false" style="position: absolute; width: 1px; height: 1px; overflow: hidden; white-space: nowrap; clip: rect(1px, 1px, 1px, 1px); margin-top: -3px; opacity: 0.01;"><p>HbA1c Levels of Patients</p><div>Line chart with 3 lines.</div><div>The chart has 1 X axis displaying Time. Data ranges from 2023-01-01 00:00:00 to 2024-12-01 00:00:00.</div><div>The chart has 1 Y axis displaying Patient Count. Data ranges from 12 to 98.</div></div></div><div aria-hidden="false" class="highcharts-announcer-container" style="position: relative;"><div aria-hidden="false" aria-live="polite" aria-atomic="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; white-space: nowrap; clip: rect(1px, 1px, 1px, 1px); margin-top: -3px; opacity: 0.01;"></div><div aria-hidden="false" aria-live="assertive" aria-atomic="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; white-space: nowrap; clip: rect(1px, 1px, 1px, 1px); margin-top: -3px; opacity: 0.01;"></div><div aria-hidden="false" aria-live="polite" aria-atomic="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; white-space: nowrap; clip: rect(1px, 1px, 1px, 1px); margin-top: -3px; opacity: 0.01;"></div><div aria-hidden="false" aria-live="polite" aria-atomic="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; white-space: nowrap; clip: rect(1px, 1px, 1px, 1px); margin-top: -3px; opacity: 0.01;"></div></div><div style="position: relative; height: 0px; z-index: 1;" aria-hidden="false"><select style="position: absolute; width: 1px; height: 1px; padding: 0px; border: 0px; top: -9999em; cursor: pointer; opacity: 0.0001; margin-top: 33px;" aria-hidden="true" aria-label="Zoom" tabindex="-1"><option disabled="">Zoom</option><option disabled="">View 1 month</option><option disabled="">View 3 months</option><option>View 6 months</option><option>View year to date</option><option>View 1 year</option><option>View all</option></select><input name="min" class="highcharts-range-selector" type="date" style="position: absolute; border: 0px; box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 15px; width: 1px; height: 1px; padding: 0px; text-align: center; font-size: 0.8em; font-family: Helvetica, Arial, sans-serif; top: -9999em; color: rgb(51, 78, 255); cursor: pointer; margin-top: 33px;" min="2023-01-01" data-hc-time="1703476394079.0786" max="2024-05-17" aria-hidden="false" tabindex="-1" aria-label="Select start date." data-hc-time-previous="1703476394079.0786"><input name="max" class="highcharts-range-selector" type="date" style="position: absolute; border: 0px; box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 15px; width: 1px; height: 1px; padding: 0px; text-align: center; font-size: 0.8em; font-family: Helvetica, Arial, sans-serif; top: -9999em; color: rgb(51, 78, 255); cursor: pointer; margin-top: 33px;" max="2024-12-01" data-hc-time="1728057885969.9036" min="2024-05-13" aria-hidden="false" tabindex="-1" aria-label="Select end date." data-hc-time-previous="1728057885969.9036"></div><div id="highcharts-0oh9q8d-73" style="position: relative; overflow: hidden; width: 1112px; height: 400px; text-align: left; line-height: normal; z-index: 0; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); user-select: none; touch-action: manipulation; outline: none;" dir="ltr" class="highcharts-container " aria-hidden="false" tabindex="0"><div aria-hidden="false" class="highcharts-a11y-proxy-container-before" style="top: 0px; left: 0px; white-space: nowrap; position: absolute;"></div><svg version="1.1" class="highcharts-root" style="font-family: Helvetica, Arial, sans-serif; font-size: 1rem;" xmlns="http://www.w3.org/2000/svg" width="1112" height="400" viewBox="0 0 1112 400" aria-hidden="false" aria-label="Interactive chart"><desc aria-hidden="true">Created with Highcharts 11.4.1</desc><defs aria-hidden="true"><filter id="highcharts-drop-shadow-1"><feDropShadow dx="1" dy="1" flood-color="#000000" flood-opacity="0.75" stdDeviation="2.5"></feDropShadow></filter><clipPath id="highcharts-0oh9q8d-88-"><rect x="0" y="0" width="1032" height="329" fill="none"></rect></clipPath></defs><rect fill="#ffffff" class="highcharts-background" filter="none" x="0" y="0" width="1112" height="400" rx="0" ry="0" aria-hidden="true"></rect><rect fill="none" class="highcharts-plot-background" x="70" y="56" width="1032" height="329" filter="none" aria-hidden="true"></rect><g class="highcharts-grid highcharts-xaxis-grid" data-z-index="1" aria-hidden="true"><path fill="none" stroke="#e6e6e6" stroke-width="0" stroke-dasharray="none" data-z-index="1" class="highcharts-grid-line" d="M 535.5 56 L 535.5 385" opacity="1"></path><path fill="none" stroke="#e6e6e6" stroke-width="0" stroke-dasharray="none" data-z-index="1" class="highcharts-grid-line" d="M 756.5 56 L 756.5 385" opacity="1"></path><path fill="none" stroke="#e6e6e6" stroke-width="0" stroke-dasharray="none" data-z-index="1" class="highcharts-grid-line" d="M 977.5 56 L 977.5 385" opacity="1"></path><path fill="none" stroke="#e6e6e6" stroke-width="0" stroke-dasharray="none" data-z-index="1" class="highcharts-grid-line" d="M 314.5 56 L 314.5 385" opacity="1"></path><path fill="none" stroke="#e6e6e6" stroke-width="0" stroke-dasharray="none" data-z-index="1" class="highcharts-grid-line" d="M 93.5 56 L 93.5 385" opacity="1"></path><path fill="none" stroke="#e6e6e6" stroke-width="0" stroke-dasharray="none" data-z-index="1" class="highcharts-grid-line" d="M 204.5 56 L 204.5 385" opacity="1"></path><path fill="none" stroke="#e6e6e6" stroke-width="0" stroke-dasharray="none" data-z-index="1" class="highcharts-grid-line" d="M 425.5 56 L 425.5 385" opacity="1"></path><path fill="none" stroke="#e6e6e6" stroke-width="0" stroke-dasharray="none" data-z-index="1" class="highcharts-grid-line" d="M 646.5 56 L 646.5 385" opacity="1"></path><path fill="none" stroke="#e6e6e6" stroke-width="0" stroke-dasharray="none" data-z-index="1" class="highcharts-grid-line" d="M 867.5 56 L 867.5 385" opacity="1"></path><path fill="none" stroke="#e6e6e6" stroke-width="0" stroke-dasharray="none" data-z-index="1" class="highcharts-grid-line" d="M 1088.5 56 L 1088.5 385" opacity="1"></path></g><g class="highcharts-grid highcharts-yaxis-grid" data-z-index="1" aria-hidden="true"><path fill="none" stroke="#e6e6e6" stroke-width="1" stroke-dasharray="none" data-z-index="1" class="highcharts-grid-line" d="M 70 385.5 L 1102 385.5" opacity="1"></path><path fill="none" stroke="#e6e6e6" stroke-width="1" stroke-dasharray="none" data-z-index="1" class="highcharts-grid-line" d="M 70 330.5 L 1102 330.5" opacity="1"></path><path fill="none" stroke="#e6e6e6" stroke-width="1" stroke-dasharray="none" data-z-index="1" class="highcharts-grid-line" d="M 70 275.5 L 1102 275.5" opacity="1"></path><path fill="none" stroke="#e6e6e6" stroke-width="1" stroke-dasharray="none" data-z-index="1" class="highcharts-grid-line" d="M 70 221.5 L 1102 221.5" opacity="1"></path><path fill="none" stroke="#e6e6e6" stroke-width="1" stroke-dasharray="none" data-z-index="1" class="highcharts-grid-line" d="M 70 166.5 L 1102 166.5" opacity="1"></path><path fill="none" stroke="#e6e6e6" stroke-width="1" stroke-dasharray="none" data-z-index="1" class="highcharts-grid-line" d="M 70 111.5 L 1102 111.5" opacity="1"></path><path fill="none" stroke="#e6e6e6" stroke-width="1" stroke-dasharray="none" data-z-index="1" class="highcharts-grid-line" d="M 70 55.5 L 1102 55.5" opacity="1"></path></g><rect fill="none" class="highcharts-plot-border" data-z-index="1" stroke="#cccccc" stroke-width="0" x="70" y="56" width="1032" height="329" aria-hidden="true"></rect><g class="highcharts-axis highcharts-xaxis" data-z-index="2" aria-hidden="true"><path fill="none" class="highcharts-axis-line" stroke="#333333" stroke-width="0" data-z-index="7" d="M 70 385 L 1102 385"></path></g><g class="highcharts-axis highcharts-yaxis" data-z-index="2" aria-hidden="true"><text x="23.5625" data-z-index="7" text-anchor="middle" transform="translate(0,0) rotate(270 23.5625 220.5)" class="highcharts-axis-title" style="color: rgb(102, 102, 102); font-size: 0.8em; fill: rgb(102, 102, 102);" y="220.5">Patient Count</text><path fill="none" class="highcharts-axis-line" stroke="#333333" stroke-width="0" data-z-index="7" d="M 70 56 L 70 385"></path></g><path fill="none" class="highcharts-crosshair highcharts-crosshair-thin" data-z-index="2" stroke="#cccccc" stroke-width="1" d="M 1122.5 56 L 1122.5 385" style="pointer-events: none;" aria-hidden="true" visibility="hidden"></path><g class="highcharts-series-group" data-z-index="3" filter="none" aria-hidden="false"><g class="highcharts-series highcharts-series-0 highcharts-spline-series highcharts-color-0" data-z-index="0.1" opacity="1" transform="translate(70,56) scale(1 1)" clip-path="url(#highcharts-0oh9q8d-88-)" aria-hidden="true"><path fill="none" d="M -86.129401645017 120.63333333333 C -86.129401645017 120.63333333333 -19.8265724663232 151.88833333333272 24.375313652806 180.95 C 68.5771997719356 210.01166666666754 90.6781428315004 265.941666666667 134.88002895063 265.941666666667 C 179.081915069758 265.941666666667 201.182858129322 228.65499999999838 245.38474424845 205.625 C 289.58663036758196 182.59499999999957 311.68757342714804 150.79166666667 355.88945954628 150.79166666667 C 400.091345665408 150.79166666667 422.19228872497206 211.10833333333 466.3941748441 211.10833333333 C 510.59606096322807 211.10833333333 532.6970040227919 199.04500000000002 576.89889014192 180.95 C 621.1007762610479 162.85500000000002 643.2017193206119 138.72833333333006 687.40360543974 120.63333333333 C 731.6054915588679 102.53833333333002 753.706434618432 102.53833333333196 797.90832073756 90.475 C 842.1102068566881 78.41166666666795 864.2111499162518 60.31666666667002 908.41303603538 60.31666666667002 C 952.614922154508 60.31666666667002 974.7158652140719 72.37999999999829 1018.9177513332 90.475 C 1063.11963745232 108.5699999999983 1129.422466631 150.79166666667 1129.422466631 150.79166666667" class="highcharts-graph" data-z-index="1" stroke="#2caffe" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" filter="none"></path><path fill="none" d="M -86.129401645017 120.63333333333 C -86.129401645017 120.63333333333 -19.8265724663232 151.88833333333272 24.375313652806 180.95 C 68.5771997719356 210.01166666666754 90.6781428315004 265.941666666667 134.88002895063 265.941666666667 C 179.081915069758 265.941666666667 201.182858129322 228.65499999999838 245.38474424845 205.625 C 289.58663036758196 182.59499999999957 311.68757342714804 150.79166666667 355.88945954628 150.79166666667 C 400.091345665408 150.79166666667 422.19228872497206 211.10833333333 466.3941748441 211.10833333333 C 510.59606096322807 211.10833333333 532.6970040227919 199.04500000000002 576.89889014192 180.95 C 621.1007762610479 162.85500000000002 643.2017193206119 138.72833333333006 687.40360543974 120.63333333333 C 731.6054915588679 102.53833333333002 753.706434618432 102.53833333333196 797.90832073756 90.475 C 842.1102068566881 78.41166666666795 864.2111499162518 60.31666666667002 908.41303603538 60.31666666667002 C 952.614922154508 60.31666666667002 974.7158652140719 72.37999999999829 1018.9177513332 90.475 C 1063.11963745232 108.5699999999983 1129.422466631 150.79166666667 1129.422466631 150.79166666667" data-z-index="2" class="highcharts-tracker-line" stroke-linecap="round" stroke-linejoin="round" stroke="rgba(192,192,192,0.0001)" stroke-width="22"></path></g><g class="highcharts-markers highcharts-series-0 highcharts-spline-series highcharts-color-0 highcharts-tracker" data-z-index="0.1" opacity="1" transform="translate(70,56) scale(1 1)" clip-path="none" aria-hidden="false" role="region" tabindex="-1" aria-label="Low HbA1c, line 1 of 3 with 12 data points." style="outline: none;"><path fill="#2caffe" d="M 1018 92.475 A 2 2 0 1 1 1018.0019999996666 92.47499900000008 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-0" tabindex="-1" role="img" aria-label="October 2024, 87. Low HbA1c." style="outline: none;"></path><path fill="#2caffe" d="M 908 62.31666666667002 A 2 2 0 1 1 908.0019999996666 62.3166656666701 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-0" tabindex="-1" role="img" aria-label="September 2024, 98. Low HbA1c." style="outline: none;"></path><path fill="#2caffe" d="M 797 92.475 A 2 2 0 1 1 797.0019999996666 92.47499900000008 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-0" tabindex="-1" role="img" aria-label="August 2024, 87. Low HbA1c." style="outline: none;"></path><path fill="#2caffe" d="M 687 122.63333333333 A 2 2 0 1 1 687.0019999996666 122.63333233333009 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-0" tabindex="-1" role="img" aria-label="July 2024, 76. Low HbA1c." style="outline: none;"></path><path fill="#2caffe" d="M 576 182.95 A 2 2 0 1 1 576.0019999996666 182.94999900000008 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-0" tabindex="-1" role="img" aria-label="June 2024, 54. Low HbA1c." style="outline: none;"></path><path fill="#2caffe" d="M 466 213.10833333333 A 2 2 0 1 1 466.0019999996667 213.10833233333008 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-0" tabindex="-1" role="img" aria-label="May 2024, 43. Low HbA1c." style="outline: none;"></path><path fill="#2caffe" d="M 355 152.79166666667 A 2 2 0 1 1 355.0019999996667 152.7916656666701 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-0" tabindex="-1" role="img" aria-label="April 2024, 65. Low HbA1c." style="outline: none;"></path><path fill="#2caffe" d="M 245 207.625 A 2 2 0 1 1 245.00199999966668 207.6249990000001 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-0" tabindex="-1" role="img" aria-label="March 2024, 45. Low HbA1c." style="outline: none;"></path><path fill="#2caffe" d="M 134 267.941666666667 A 2 2 0 1 1 134.00199999966668 267.94166566666706 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-0" tabindex="-1" role="img" aria-label="February 2024, 23. Low HbA1c." style="outline: none;"></path><path fill="#2caffe" d="M 24 182.95 A 2 2 0 1 1 24.00199999966667 182.94999900000008 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-0" tabindex="-1" role="img" aria-label="January 2024, 54. Low HbA1c." style="outline: none;"></path><path fill="#2caffe" d="M 1053 150.79166666667 A 0 0 0 1 1 1053 150.79166666667 Z" class="highcharts-halo highcharts-color-0" data-z-index="-1" fill-opacity="0.25" visibility="hidden"></path></g><g class="highcharts-series highcharts-series-1 highcharts-spline-series highcharts-color-1" data-z-index="0.1" opacity="1" transform="translate(70,56) scale(1 1)" clip-path="url(#highcharts-0oh9q8d-88-)" aria-hidden="true"><path fill="none" d="M -86.129401645017 150.79166666667 C -86.129401645017 150.79166666667 -19.8265724663232 175.46666666666 24.375313652806 178.20833333333 C 68.5771997719356 180.95 90.6781428315004 178.20833333333 134.88002895063 180.95 C 179.081915069758 183.69166666667 201.182858129322 199.04499999999715 245.38474424845 211.10833333333 C 289.58663036758196 223.17166666666395 311.68757342714804 229.20333333333244 355.88945954628 241.266666666667 C 400.091345665408 253.33000000000047 422.19228872497206 260.4583333333334 466.3941748441 271.425 C 510.59606096322807 282.39166666666665 532.6970040227919 296.1 576.89889014192 296.1 C 621.1007762610479 296.1 643.2017193206119 278.00500000000045 687.40360543974 265.941666666667 C 731.6054915588679 253.87833333333361 753.706434618432 247.8466666666664 797.90832073756 235.78333333333302 C 842.1102068566881 223.71999999999957 864.2111499162518 217.68833333333262 908.41303603538 205.625 C 952.614922154508 193.5616666666674 974.7158652140719 187.53000000000512 1018.9177513332 175.46666666667 C 1063.11963745232 163.40333333333714 1129.422466631 145.30833333333 1129.422466631 145.30833333333" class="highcharts-graph" data-z-index="1" stroke="#544fc5" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" filter="none"></path><path fill="none" d="M -86.129401645017 150.79166666667 C -86.129401645017 150.79166666667 -19.8265724663232 175.46666666666 24.375313652806 178.20833333333 C 68.5771997719356 180.95 90.6781428315004 178.20833333333 134.88002895063 180.95 C 179.081915069758 183.69166666667 201.182858129322 199.04499999999715 245.38474424845 211.10833333333 C 289.58663036758196 223.17166666666395 311.68757342714804 229.20333333333244 355.88945954628 241.266666666667 C 400.091345665408 253.33000000000047 422.19228872497206 260.4583333333334 466.3941748441 271.425 C 510.59606096322807 282.39166666666665 532.6970040227919 296.1 576.89889014192 296.1 C 621.1007762610479 296.1 643.2017193206119 278.00500000000045 687.40360543974 265.941666666667 C 731.6054915588679 253.87833333333361 753.706434618432 247.8466666666664 797.90832073756 235.78333333333302 C 842.1102068566881 223.71999999999957 864.2111499162518 217.68833333333262 908.41303603538 205.625 C 952.614922154508 193.5616666666674 974.7158652140719 187.53000000000512 1018.9177513332 175.46666666667 C 1063.11963745232 163.40333333333714 1129.422466631 145.30833333333 1129.422466631 145.30833333333" data-z-index="2" class="highcharts-tracker-line" stroke-linecap="round" stroke-linejoin="round" stroke="rgba(192,192,192,0.0001)" stroke-width="22"></path></g><g class="highcharts-markers highcharts-series-1 highcharts-spline-series highcharts-color-1 highcharts-tracker" data-z-index="0.1" opacity="1" transform="translate(70,56) scale(1 1)" clip-path="none" aria-hidden="false" role="region" tabindex="-1" aria-label="Normal HbA1c, line 2 of 3 with 12 data points." style="outline: none;"><path fill="#544fc5" d="M 1018 173.46666666667 L 1020 175.46666666667 L 1018 177.46666666667 L 1016 175.46666666667 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-1" tabindex="-1" role="img" aria-label="October 2024, 56. Normal HbA1c." style="outline: none;"></path><path fill="#544fc5" d="M 908 203.625 L 910 205.625 L 908 207.625 L 906 205.625 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-1" tabindex="-1" role="img" aria-label="September 2024, 45. Normal HbA1c." style="outline: none;"></path><path fill="#544fc5" d="M 797 233.78333333333302 L 799 235.78333333333302 L 797 237.78333333333302 L 795 235.78333333333302 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-1" tabindex="-1" role="img" aria-label="August 2024, 34. Normal HbA1c." style="outline: none;"></path><path fill="#544fc5" d="M 687 263.941666666667 L 689 265.941666666667 L 687 267.941666666667 L 685 265.941666666667 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-1" tabindex="-1" role="img" aria-label="July 2024, 23. Normal HbA1c." style="outline: none;"></path><path fill="#544fc5" d="M 576 294.1 L 578 296.1 L 576 298.1 L 574 296.1 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-1" tabindex="-1" role="img" aria-label="June 2024, 12. Normal HbA1c." style="outline: none;"></path><path fill="#544fc5" d="M 466 269.425 L 468 271.425 L 466 273.425 L 464 271.425 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-1" tabindex="-1" role="img" aria-label="May 2024, 21. Normal HbA1c." style="outline: none;"></path><path fill="#544fc5" d="M 355 239.266666666667 L 357 241.266666666667 L 355 243.266666666667 L 353 241.266666666667 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-1" tabindex="-1" role="img" aria-label="April 2024, 32. Normal HbA1c." style="outline: none;"></path><path fill="#544fc5" d="M 245 209.10833333333 L 247 211.10833333333 L 245 213.10833333333 L 243 211.10833333333 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-1" tabindex="-1" role="img" aria-label="March 2024, 43. Normal HbA1c." style="outline: none;"></path><path fill="#544fc5" d="M 134 178.95 L 136 180.95 L 134 182.95 L 132 180.95 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-1" tabindex="-1" role="img" aria-label="February 2024, 54. Normal HbA1c." style="outline: none;"></path><path fill="#544fc5" d="M 24 176.20833333333 L 26 178.20833333333 L 24 180.20833333333 L 22 178.20833333333 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-1" tabindex="-1" role="img" aria-label="January 2024, 55. Normal HbA1c." style="outline: none;"></path><path fill="#544fc5" d="M 1053 145.30833333333 A 0 0 0 1 1 1053 145.30833333333 Z" class="highcharts-halo highcharts-color-1" data-z-index="-1" fill-opacity="0.25" visibility="hidden"></path></g><g class="highcharts-series highcharts-series-2 highcharts-spline-series highcharts-color-2" data-z-index="0.1" opacity="1" transform="translate(70,56) scale(1 1)" clip-path="url(#highcharts-0oh9q8d-88-)" aria-hidden="true"><path fill="none" d="M -86.129401645017 142.56666666667 C -86.129401645017 142.56666666667 -19.8265724663232 139.276666666664 24.375313652806 137.08333333333 C 68.5771997719356 134.88999999999598 90.6781428315004 134.34166666666604 134.88002895063 131.6 C 179.081915069758 128.85833333333406 201.182858129322 126.66499999999986 245.38474424845 123.375 C 289.58663036758196 120.08499999999985 311.68757342714804 117.89166666666613 355.88945954628 115.15 C 400.091345665408 112.40833333333414 422.19228872497206 111.860000000004 466.3941748441 109.66666666667001 C 510.59606096322807 107.47333333333602 532.6970040227919 106.92499999999802 576.89889014192 104.18333333333001 C 621.1007762610479 101.44166666666202 643.2017193206119 99.24833333333 687.40360543974 95.95833333332999 C 731.6054915588679 92.66833333332998 753.706434618432 90.47499999999599 797.90832073756 87.73333333333 C 842.1102068566881 84.991666666664 864.2111499162518 84.44333333333199 908.41303603538 82.25 C 952.614922154508 80.05666666666801 974.7158652140719 79.50833333333627 1018.9177513332 76.76666666667 C 1063.11963745232 74.02500000000427 1129.422466631 68.54166666666998 1129.422466631 68.54166666666998" class="highcharts-graph" data-z-index="1" stroke="#00e272" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" filter="none"></path><path fill="none" d="M -86.129401645017 142.56666666667 C -86.129401645017 142.56666666667 -19.8265724663232 139.276666666664 24.375313652806 137.08333333333 C 68.5771997719356 134.88999999999598 90.6781428315004 134.34166666666604 134.88002895063 131.6 C 179.081915069758 128.85833333333406 201.182858129322 126.66499999999986 245.38474424845 123.375 C 289.58663036758196 120.08499999999985 311.68757342714804 117.89166666666613 355.88945954628 115.15 C 400.091345665408 112.40833333333414 422.19228872497206 111.860000000004 466.3941748441 109.66666666667001 C 510.59606096322807 107.47333333333602 532.6970040227919 106.92499999999802 576.89889014192 104.18333333333001 C 621.1007762610479 101.44166666666202 643.2017193206119 99.24833333333 687.40360543974 95.95833333332999 C 731.6054915588679 92.66833333332998 753.706434618432 90.47499999999599 797.90832073756 87.73333333333 C 842.1102068566881 84.991666666664 864.2111499162518 84.44333333333199 908.41303603538 82.25 C 952.614922154508 80.05666666666801 974.7158652140719 79.50833333333627 1018.9177513332 76.76666666667 C 1063.11963745232 74.02500000000427 1129.422466631 68.54166666666998 1129.422466631 68.54166666666998" data-z-index="2" class="highcharts-tracker-line" stroke-linecap="round" stroke-linejoin="round" stroke="rgba(192,192,192,0.0001)" stroke-width="22"></path></g><g class="highcharts-markers highcharts-series-2 highcharts-spline-series highcharts-color-2 highcharts-tracker" data-z-index="0.1" opacity="1" transform="translate(70,56) scale(1 1)" clip-path="none" aria-hidden="false" role="region" tabindex="-1" aria-label="High HbA1c, line 3 of 3 with 12 data points." style="outline: none;"><path fill="#00e272" d="M 1016 74.76666666667 L 1020 74.76666666667 L 1020 78.76666666667 L 1016 78.76666666667 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-2" tabindex="-1" role="img" aria-label="October 2024, 92. High HbA1c." style="outline: none;"></path><path fill="#00e272" d="M 906 80.25 L 910 80.25 L 910 84.25 L 906 84.25 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-2" tabindex="-1" role="img" aria-label="September 2024, 90. High HbA1c." style="outline: none;"></path><path fill="#00e272" d="M 795 85.73333333333 L 799 85.73333333333 L 799 89.73333333333 L 795 89.73333333333 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-2" tabindex="-1" role="img" aria-label="August 2024, 88. High HbA1c." style="outline: none;"></path><path fill="#00e272" d="M 685 93.95833333332999 L 689 93.95833333332999 L 689 97.95833333332999 L 685 97.95833333332999 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-2" tabindex="-1" role="img" aria-label="July 2024, 85. High HbA1c." style="outline: none;"></path><path fill="#00e272" d="M 574 102.18333333333001 L 578 102.18333333333001 L 578 106.18333333333001 L 574 106.18333333333001 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-2" tabindex="-1" role="img" aria-label="June 2024, 82. High HbA1c." style="outline: none;"></path><path fill="#00e272" d="M 464 107.66666666667001 L 468 107.66666666667001 L 468 111.66666666667001 L 464 111.66666666667001 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-2" tabindex="-1" role="img" aria-label="May 2024, 80. High HbA1c." style="outline: none;"></path><path fill="#00e272" d="M 353 113.15 L 357 113.15 L 357 117.15 L 353 117.15 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-2" tabindex="-1" role="img" aria-label="April 2024, 78. High HbA1c." style="outline: none;"></path><path fill="#00e272" d="M 243 121.375 L 247 121.375 L 247 125.375 L 243 125.375 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-2" tabindex="-1" role="img" aria-label="March 2024, 75. High HbA1c." style="outline: none;"></path><path fill="#00e272" d="M 132 129.6 L 136 129.6 L 136 133.6 L 132 133.6 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-2" tabindex="-1" role="img" aria-label="February 2024, 72. High HbA1c." style="outline: none;"></path><path fill="#00e272" d="M 22 135.08333333333 L 26 135.08333333333 L 26 139.08333333333 L 22 139.08333333333 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-2" tabindex="-1" role="img" aria-label="January 2024, 70. High HbA1c." style="outline: none;"></path><path fill="#00e272" d="M 1053 68.54166666666998 A 0 0 0 1 1 1053 68.54166666666998 Z" class="highcharts-halo highcharts-color-2" data-z-index="-1" fill-opacity="0.25" visibility="hidden"></path></g></g><g class="highcharts-exporting-group" data-z-index="3" aria-hidden="true"><g class="highcharts-no-tooltip highcharts-button highcharts-contextbutton" stroke-linecap="round" style="cursor: pointer;" transform="translate(1074,10)"><title>Chart context menu</title><rect fill="#ffffff" class="highcharts-button-box" x="0.5" y="0.5" width="28" height="28" rx="2" ry="2" stroke="none" stroke-width="1"></rect><path fill="#666666" d="M 8 9.5 L 22 9.5 M 8 14.5 L 22 14.5 M 8 19.5 L 22 19.5" class="highcharts-button-symbol" data-z-index="1" stroke="#666666" stroke-width="3"></path><text x="0" data-z-index="1" y="18.5" style="color: rgb(51, 51, 51); font-size: 0.8em; font-weight: normal; fill: rgb(51, 51, 51);"></text></g></g><text x="556" text-anchor="middle" class="highcharts-title" data-z-index="4" style="font-size: 1em; color: rgb(51, 51, 51); font-weight: bold; fill: rgb(51, 51, 51);" y="22" aria-hidden="true">HbA1c Levels of Patients</text><text x="556" text-anchor="middle" class="highcharts-subtitle" data-z-index="4" style="color: rgb(102, 102, 102); font-size: 0.8em; fill: rgb(102, 102, 102);" y="42" aria-hidden="true"></text><text x="10" text-anchor="start" class="highcharts-caption" data-z-index="4" style="color: rgb(102, 102, 102); font-size: 0.8em; fill: rgb(102, 102, 102);" y="397" aria-hidden="true"></text><g class="highcharts-axis-labels highcharts-xaxis-labels" data-z-index="7" aria-hidden="true"></g><g class="highcharts-axis-labels highcharts-yaxis-labels" data-z-index="7" aria-hidden="true"><text x="55" style="color: rgb(51, 51, 51); cursor: default; font-size: 0.8em; fill: rgb(51, 51, 51);" text-anchor="end" transform="translate(0,0)" y="383" opacity="1">0</text><text x="55" style="color: rgb(51, 51, 51); cursor: default; font-size: 0.8em; fill: rgb(51, 51, 51);" text-anchor="end" transform="translate(0,0)" y="328" opacity="1">20</text><text x="55" style="color: rgb(51, 51, 51); cursor: default; font-size: 0.8em; fill: rgb(51, 51, 51);" text-anchor="end" transform="translate(0,0)" y="273" opacity="1">40</text><text x="55" style="color: rgb(51, 51, 51); cursor: default; font-size: 0.8em; fill: rgb(51, 51, 51);" text-anchor="end" transform="translate(0,0)" y="219" opacity="1">60</text><text x="55" style="color: rgb(51, 51, 51); cursor: default; font-size: 0.8em; fill: rgb(51, 51, 51);" text-anchor="end" transform="translate(0,0)" y="164" opacity="1">80</text><text x="55" style="color: rgb(51, 51, 51); cursor: default; font-size: 0.8em; fill: rgb(51, 51, 51);" text-anchor="end" transform="translate(0,0)" y="109" opacity="1">100</text><text x="0" style="color: rgb(51, 51, 51); cursor: default; font-size: 0.8em; fill: rgb(51, 51, 51);" text-anchor="end" transform="translate(0,0)" visibility="hidden">120</text></g><g class="highcharts-range-selector-group" data-z-index="7" transform="translate(0,33)" aria-hidden="false"><g class="highcharts-range-selector-buttons" transform="translate(0,10)" aria-hidden="false"><g class="highcharts-label" transform="translate(70,0)" aria-hidden="true"><text x="0" data-z-index="1" y="15.5" style="color: rgb(102, 102, 102); font-size: 0.8em; fill: rgb(102, 102, 102);">Zoom</text></g><g class="highcharts-no-tooltip highcharts-button highcharts-button-disabled" data-z-index="7" style="cursor: pointer;" transform="translate(108,0)" aria-hidden="false" tabindex="-1" role="button"><title>View 1 month</title><rect fill="#f7f7f7" class="highcharts-button-box" x="0" y="0" width="32" height="22" rx="2" ry="2" stroke-width="0" stroke="#cccccc"></rect><text x="7.106249809265137" data-z-index="1" y="15.5" style="color: rgb(204, 204, 204); font-size: 0.8em; font-weight: normal; fill: rgb(204, 204, 204);">1m</text></g><g class="highcharts-no-tooltip highcharts-button highcharts-button-disabled" data-z-index="7" style="cursor: pointer;" transform="translate(145,0)" aria-hidden="false" tabindex="-1" role="button"><title>View 3 months</title><rect fill="#f7f7f7" class="highcharts-button-box" x="0" y="0" width="32" height="22" rx="2" ry="2" stroke-width="0" stroke="#cccccc"></rect><text x="7.106249809265137" data-z-index="1" y="15.5" style="color: rgb(204, 204, 204); font-size: 0.8em; font-weight: normal; fill: rgb(204, 204, 204);">3m</text></g><g class="highcharts-no-tooltip highcharts-button highcharts-button-normal" data-z-index="7" style="cursor: pointer;" transform="translate(182,0)" aria-hidden="false" tabindex="-1" role="button"><title>View 6 months</title><rect fill="#f7f7f7" class="highcharts-button-box" x="0" y="0" width="32" height="22" rx="2" ry="2" stroke-width="0" stroke="#cccccc"></rect><text x="7.106249809265137" data-z-index="1" y="15.5" style="color: rgb(51, 51, 51); font-size: 0.8em; font-weight: normal; fill: rgb(51, 51, 51);">6m</text></g><g class="highcharts-no-tooltip highcharts-button highcharts-button-normal" data-z-index="7" style="cursor: pointer;" transform="translate(219,0)" aria-hidden="false" tabindex="-1" role="button"><title>View year to date</title><rect fill="#f7f7f7" class="highcharts-button-box" x="0" y="0" width="32" height="22" rx="2" ry="2" stroke-width="0" stroke="#cccccc"></rect><text x="2.8000001907348633" data-z-index="1" y="15.5" style="color: rgb(51, 51, 51); font-size: 0.8em; font-weight: normal; fill: rgb(51, 51, 51);">YTD</text></g><g class="highcharts-no-tooltip highcharts-button highcharts-button-normal" data-z-index="7" style="cursor: pointer;" transform="translate(256,0)" aria-hidden="false" tabindex="-1" role="button"><title>View 1 year</title><rect fill="#f7f7f7" class="highcharts-button-box" x="0" y="0" width="32" height="22" rx="2" ry="2" stroke-width="0" stroke="#cccccc"></rect><text x="8.840624809265137" data-z-index="1" y="15.5" style="color: rgb(51, 51, 51); font-size: 0.8em; font-weight: normal; fill: rgb(51, 51, 51);">1y</text></g><g class="highcharts-no-tooltip highcharts-button highcharts-button-normal" data-z-index="7" style="cursor: pointer;" transform="translate(293,0)" aria-hidden="false" tabindex="-1" role="button"><title>View all</title><rect fill="#f7f7f7" class="highcharts-button-box" x="0" y="0" width="32" height="22" rx="2" ry="2" stroke-width="0" stroke="#cccccc"></rect><text x="8.487499713897705" data-z-index="1" y="15.5" style="color: rgb(51, 51, 51); font-size: 0.8em; font-weight: normal; fill: rgb(51, 51, 51);">All</text></g></g><g class="highcharts-input-group" transform="translate(930,10)" aria-hidden="true"><g class="highcharts-label highcharts-range-label" transform="translate(0,0)"><text x="0" data-z-index="1" y="12" style="color: rgb(102, 102, 102); font-family: Helvetica, Arial, sans-serif; font-size: 0.8em; fill: rgb(102, 102, 102);"></text></g><g class="highcharts-label highcharts-range-input" transform="translate(0,0)" style="cursor: pointer;"><rect fill="none" class="highcharts-label-box" x="0.5" y="0.5" width="77" height="21" stroke="none" stroke-width="1"></rect><text x="2" data-z-index="1" y="15" style="color: rgb(51, 78, 255); font-family: Helvetica, Arial, sans-serif; font-size: 0.8em; fill: rgb(51, 78, 255);">25 Dec 2023</text></g><g class="highcharts-label highcharts-range-label" transform="translate(82,0)"><text x="2" data-z-index="1" y="15" style="color: rgb(102, 102, 102); font-family: Helvetica, Arial, sans-serif; font-size: 0.8em; fill: rgb(102, 102, 102);">→</text></g><g class="highcharts-label highcharts-range-input" transform="translate(103,0)" style="cursor: pointer;"><rect fill="none" class="highcharts-label-box" x="0.5" y="0.5" width="67" height="21" stroke="none" stroke-width="1"></rect><text x="2" data-z-index="1" y="15" style="color: rgb(51, 78, 255); font-family: Helvetica, Arial, sans-serif; font-size: 0.8em; fill: rgb(51, 78, 255);">4 Oct 2024</text></g></g></g><text x="1102" class="highcharts-credits" text-anchor="end" data-z-index="8" y="395" style="cursor: pointer; color: rgb(153, 153, 153); font-size: 0.6em; fill: rgb(153, 153, 153);" aria-label="Chart credits: Highcharts.com" aria-hidden="false">Highcharts.com</text><g class="highcharts-tooltip" data-z-index="8" filter="url(#highcharts-drop-shadow-1)" opacity="0" aria-hidden="true" visibility="hidden"><g class="highcharts-label highcharts-tooltip-header highcharts-tooltip-box" transform="translate(1078,384)" style="cursor: default;"><path fill="#ffffff" class="highcharts-label-box" d="M 3.5 0.5 L 38.5 0.5 L 44.5 -5.5 L 50.5 0.5 L 87 0.5 A 3 3 0 0 1 90.5 3.5 L 90.5 25.5 A 3 3 0 0 1 87.5 28.5 L 3.5 28.5 A 3 3 0 0 1 0.5 25.5 L 0.5 3.5 A 3 3 0 0 1 3.5 0.5 Z" stroke-width="1" stroke="#333333"></path><text x="8" data-z-index="1" y="20" style="color: rgb(51, 51, 51); font-size: 0.8em; fill: rgb(51, 51, 51);"><tspan style="font-size: 0.8em;">November 2024</tspan><tspan class="highcharts-br">​</tspan></text></g><g class="highcharts-label highcharts-tooltip-box highcharts-color-0" transform="translate(992,204)" style="cursor: default;"><path fill="#ffffff" class="highcharts-label-box" d="M 3.5 0.5 L 111.5 0.5 A 3 3 0 0 1 114.5 3.5 L 114.5 15 L 130.5 2.791666666670011 L 114.5 15 L 114.5 27.5 A 3 3 0 0 1 111.5 30.5 L 3.5 30.5 A 3 3 0 0 1 0.5 27.5 L 0.5 3.5 A 3 3 0 0 1 3.5 0.5 Z" stroke-width="1" stroke="#2caffe"></path><text x="8" data-z-index="1" y="20" style="color: rgb(51, 51, 51); font-size: 0.8em; fill: rgb(51, 51, 51);"><tspan style="color: rgb(44, 175, 254); fill: rgb(44, 175, 254);">●</tspan> Low HbA1c: <tspan style="font-weight: bold;">65</tspan><tspan class="highcharts-br">​</tspan></text></g><g class="highcharts-label highcharts-tooltip-box highcharts-color-1" transform="translate(974,173)" style="cursor: default;"><path fill="#ffffff" class="highcharts-label-box" d="M 3.5 0.5 L 129.5 0.5 A 3 3 0 0 1 132.5 3.5 L 132.5 15 L 148.5 28.308333333330012 L 132.5 15 L 132.5 27.5 A 3 3 0 0 1 129.5 30.5 L 3.5 30.5 A 3 3 0 0 1 0.5 27.5 L 0.5 3.5 A 3 3 0 0 1 3.5 0.5 Z" stroke-width="1" stroke="#544fc5"></path><text x="8" data-z-index="1" y="20" style="color: rgb(51, 51, 51); font-size: 0.8em; fill: rgb(51, 51, 51);"><tspan style="color: rgb(84, 79, 197); fill: rgb(84, 79, 197);">●</tspan> Normal HbA1c: <tspan style="font-weight: bold;">67</tspan><tspan class="highcharts-br">​</tspan></text></g><g class="highcharts-label highcharts-tooltip-box highcharts-color-2" transform="translate(989,109)" style="cursor: default;"><path fill="#ffffff" class="highcharts-label-box" d="M 3.5 0.5 L 114.5 0.5 A 3 3 0 0 1 117.5 3.5 L 117.5 9.541666666669983 L 123.5 15.541666666669983 L 117.5 21.541666666669983 L 117.5 27.5 A 3 3 0 0 1 114.5 30.5 L 3.5 30.5 A 3 3 0 0 1 0.5 27.5 L 0.5 3.5 A 3 3 0 0 1 3.5 0.5 Z" stroke-width="1" stroke="#00e272"></path><text x="8" data-z-index="1" y="20" style="color: rgb(51, 51, 51); font-size: 0.8em; fill: rgb(51, 51, 51);"><tspan style="color: rgb(0, 226, 114); fill: rgb(0, 226, 114);">●</tspan> High HbA1c: <tspan style="font-weight: bold;">95</tspan><tspan class="highcharts-br">​</tspan></text></g></g></svg><div aria-hidden="false" class="highcharts-a11y-proxy-container-after" style="top: 0px; left: 0px; white-space: nowrap; position: absolute;"><div class="highcharts-a11y-proxy-group highcharts-a11y-proxy-group-zoom"></div><div class="highcharts-a11y-proxy-group highcharts-a11y-proxy-group-navigator" role="region" aria-label="Axis zoom"></div><div class="highcharts-a11y-proxy-group highcharts-a11y-proxy-group-chartMenu"><button class="highcharts-a11y-proxy-element highcharts-no-tooltip" aria-label="View chart menu, HbA1c Levels of Patients" aria-expanded="false" title="Chart context menu" style="border-width: 0px; background-color: transparent; cursor: pointer; outline: none; opacity: 0.001; z-index: 999; overflow: hidden; padding: 0px; margin: 0px; display: block; position: absolute; width: 28px; height: 28px; left: 1075px; top: -259px;"></button></div></div></div><div id="highcharts-screen-reader-region-after-1" aria-hidden="false" style="position: relative;"><div aria-hidden="false" style="position: absolute; width: 1px; height: 1px; overflow: hidden; white-space: nowrap; clip: rect(1px, 1px, 1px, 1px); margin-top: -3px; opacity: 0.01;"><div id="highcharts-end-of-chart-marker-1" class="highcharts-exit-anchor" tabindex="0" aria-hidden="false">End of interactive chart.</div></div></div></div>
+<div id="container" style="min-width: 310px; height: 400px; margin: 0px auto; overflow: hidden;" data-highcharts-chart="0" aria-hidden="false" role="region" aria-label="Cholesterol Levels of Patients. Highcharts interactive chart."><div id="highcharts-screen-reader-region-before-0" aria-hidden="false" style="position: relative;"><div aria-hidden="false" style="position: absolute; width: 1px; height: 1px; overflow: hidden; white-space: nowrap; clip: rect(1px, 1px, 1px, 1px); margin-top: -3px; opacity: 0.01;"><p>Cholesterol Levels of Patients</p><div>Combination chart with 4 data series.</div><div>The chart has 2 X axes displaying  Time, and navigator-x-axis.</div><div>The chart has 2 Y axes displaying  Patient Count, and navigator-y-axis.</div></div></div><div aria-hidden="false" class="highcharts-announcer-container" style="position: relative;"><div aria-hidden="false" aria-live="polite" aria-atomic="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; white-space: nowrap; clip: rect(1px, 1px, 1px, 1px); margin-top: -3px; opacity: 0.01;"></div><div aria-hidden="false" aria-live="assertive" aria-atomic="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; white-space: nowrap; clip: rect(1px, 1px, 1px, 1px); margin-top: -3px; opacity: 0.01;"></div><div aria-hidden="false" aria-live="polite" aria-atomic="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; white-space: nowrap; clip: rect(1px, 1px, 1px, 1px); margin-top: -3px; opacity: 0.01;"></div><div aria-hidden="false" aria-live="polite" aria-atomic="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; white-space: nowrap; clip: rect(1px, 1px, 1px, 1px); margin-top: -3px; opacity: 0.01;"></div></div><div style="position: relative; height: 0px; z-index: 1;" aria-hidden="false"><select style="position: absolute; width: 1px; height: 1px; padding: 0px; border: 0px; top: -9999em; cursor: pointer; opacity: 0.0001; margin-top: 33px;" aria-hidden="true" aria-label="Zoom" tabindex="-1"><option disabled="">Zoom</option><option disabled="">View 1 month</option><option disabled="">View 3 months</option><option>View 6 months</option><option>View year to date</option><option>View 1 year</option><option>View all</option></select><input name="min" class="highcharts-range-selector" type="date" style="position: absolute; border: 0px; box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 15px; width: 1px; height: 1px; padding: 0px; text-align: center; font-size: 0.8em; font-family: Helvetica, Arial, sans-serif; top: -9999em; color: rgb(51, 78, 255); cursor: pointer; margin-top: 33px;" min="2023-01-01" data-hc-time="1703476394079.0786" max="2024-05-17" aria-hidden="false" tabindex="-1" aria-label="Select start date." data-hc-time-previous="1703476394079.0786"><input name="max" class="highcharts-range-selector" type="date" style="position: absolute; border: 0px; box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 15px; width: 1px; height: 1px; padding: 0px; text-align: center; font-size: 0.8em; font-family: Helvetica, Arial, sans-serif; top: -9999em; color: rgb(51, 78, 255); cursor: pointer; margin-top: 33px;" max="2024-12-01" data-hc-time="1728057885969.9036" min="2024-05-13" aria-hidden="false" tabindex="-1" aria-label="Select end date." data-hc-time-previous="1728057885969.9036"></div><div id="highcharts-0oh9q8d-0" style="position: relative; overflow: hidden; width: 1112px; height: 400px; text-align: left; line-height: normal; z-index: 0; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); user-select: none; touch-action: manipulation; outline: none;" dir="ltr" class="highcharts-container " aria-hidden="false" tabindex="0"><div aria-hidden="false" class="highcharts-a11y-proxy-container-before" style="top: 0px; left: 0px; white-space: nowrap; position: absolute;"></div><svg version="1.1" class="highcharts-root" style="font-family: Helvetica, Arial, sans-serif; font-size: 1rem;" xmlns="http://www.w3.org/2000/svg" width="1112" height="400" viewBox="0 0 1112 400" aria-hidden="false" aria-label="Interactive chart"><desc aria-hidden="true">Created with Highcharts 11.4.1</desc><defs aria-hidden="true"><filter id="highcharts-drop-shadow-0"><feDropShadow dx="1" dy="1" flood-color="#000000" flood-opacity="0.75" stdDeviation="2.5"></feDropShadow></filter><clipPath id="highcharts-0oh9q8d-15-"><rect x="0" y="0" width="1032" height="225" fill="none"></rect></clipPath><clipPath id="highcharts-0oh9q8d-119-"><rect x="0" y="0" width="1032" height="40" fill="none"></rect></clipPath></defs><rect fill="#ffffff" class="highcharts-background" filter="none" x="0" y="0" width="1112" height="400" rx="0" ry="0" aria-hidden="true"></rect><rect fill="none" class="highcharts-plot-background" x="70" y="56" width="1032" height="225" filter="none" aria-hidden="true"></rect><g class="highcharts-grid highcharts-xaxis-grid" data-z-index="1" aria-hidden="true"><path fill="none" stroke="#e6e6e6" stroke-width="0" stroke-dasharray="none" data-z-index="1" class="highcharts-grid-line" d="M 535.5 56 L 535.5 281" opacity="1"></path><path fill="none" stroke="#e6e6e6" stroke-width="0" stroke-dasharray="none" data-z-index="1" class="highcharts-grid-line" d="M 756.5 56 L 756.5 281" opacity="1"></path><path fill="none" stroke="#e6e6e6" stroke-width="0" stroke-dasharray="none" data-z-index="1" class="highcharts-grid-line" d="M 977.5 56 L 977.5 281" opacity="1"></path><path fill="none" stroke="#e6e6e6" stroke-width="0" stroke-dasharray="none" data-z-index="1" class="highcharts-grid-line" d="M 314.5 56 L 314.5 281" opacity="1"></path><path fill="none" stroke="#e6e6e6" stroke-width="0" stroke-dasharray="none" data-z-index="1" class="highcharts-grid-line" d="M 93.5 56 L 93.5 281" opacity="1"></path><path fill="none" stroke="#e6e6e6" stroke-width="0" stroke-dasharray="none" data-z-index="1" class="highcharts-grid-line" d="M 204.5 56 L 204.5 281" opacity="1"></path><path fill="none" stroke="#e6e6e6" stroke-width="0" stroke-dasharray="none" data-z-index="1" class="highcharts-grid-line" d="M 425.5 56 L 425.5 281" opacity="1"></path><path fill="none" stroke="#e6e6e6" stroke-width="0" stroke-dasharray="none" data-z-index="1" class="highcharts-grid-line" d="M 646.5 56 L 646.5 281" opacity="1"></path><path fill="none" stroke="#e6e6e6" stroke-width="0" stroke-dasharray="none" data-z-index="1" class="highcharts-grid-line" d="M 867.5 56 L 867.5 281" opacity="1"></path><path fill="none" stroke="#e6e6e6" stroke-width="0" stroke-dasharray="none" data-z-index="1" class="highcharts-grid-line" d="M 1088.5 56 L 1088.5 281" opacity="1"></path></g><g class="highcharts-grid highcharts-xaxis-grid highcharts-navigator-xaxis" data-z-index="1" aria-hidden="true"><path fill="none" stroke="#e6e6e6" stroke-width="1" stroke-dasharray="none" data-z-index="1" class="highcharts-grid-line" d="M 69.5 332 L 69.5 372" opacity="1"></path><path fill="none" stroke="#e6e6e6" stroke-width="1" stroke-dasharray="none" data-z-index="1" class="highcharts-grid-line" d="M 607.5 332 L 607.5 372" opacity="1"></path></g><g class="highcharts-grid highcharts-yaxis-grid" data-z-index="1" aria-hidden="true"><path fill="none" stroke="#e6e6e6" stroke-width="1" stroke-dasharray="none" data-z-index="1" class="highcharts-grid-line" d="M 70 281.5 L 1102 281.5" opacity="1"></path><path fill="none" stroke="#e6e6e6" stroke-width="1" stroke-dasharray="none" data-z-index="1" class="highcharts-grid-line" d="M 70 236.5 L 1102 236.5" opacity="1"></path><path fill="none" stroke="#e6e6e6" stroke-width="1" stroke-dasharray="none" data-z-index="1" class="highcharts-grid-line" d="M 70 191.5 L 1102 191.5" opacity="1"></path><path fill="none" stroke="#e6e6e6" stroke-width="1" stroke-dasharray="none" data-z-index="1" class="highcharts-grid-line" d="M 70 146.5 L 1102 146.5" opacity="1"></path><path fill="none" stroke="#e6e6e6" stroke-width="1" stroke-dasharray="none" data-z-index="1" class="highcharts-grid-line" d="M 70 101.5 L 1102 101.5" opacity="1"></path><path fill="none" stroke="#e6e6e6" stroke-width="1" stroke-dasharray="none" data-z-index="1" class="highcharts-grid-line" d="M 70 55.5 L 1102 55.5" opacity="1"></path></g><g class="highcharts-grid highcharts-yaxis-grid highcharts-navigator-yaxis" data-z-index="1" aria-hidden="true"><path fill="none" stroke="#e6e6e6" stroke-width="0" stroke-dasharray="none" data-z-index="1" class="highcharts-grid-line" d="M 70 335.5 L 1102 335.5" opacity="1"></path></g><rect fill="none" class="highcharts-plot-border" data-z-index="1" stroke="#cccccc" stroke-width="0" x="70" y="56" width="1032" height="225" aria-hidden="true"></rect><g class="highcharts-axis highcharts-xaxis" data-z-index="2" aria-hidden="true"><path fill="none" class="highcharts-tick" stroke="#333333" stroke-width="1" d="M 535.5 281 L 535.5 291" opacity="1"></path><path fill="none" class="highcharts-tick" stroke="#333333" stroke-width="1" d="M 756.5 281 L 756.5 291" opacity="1"></path><path fill="none" class="highcharts-tick" stroke="#333333" stroke-width="1" d="M 977.5 281 L 977.5 291" opacity="1"></path><path fill="none" class="highcharts-tick" stroke="#333333" stroke-width="1" d="M 314.5 281 L 314.5 291" opacity="1"></path><path fill="none" class="highcharts-tick" stroke="#333333" stroke-width="1" d="M 93.5 281 L 93.5 291" opacity="1"></path><path fill="none" class="highcharts-tick" stroke="#333333" stroke-width="1" d="M 204.5 281 L 204.5 291" opacity="1"></path><path fill="none" class="highcharts-tick" stroke="#333333" stroke-width="1" d="M 425.5 281 L 425.5 291" opacity="1"></path><path fill="none" class="highcharts-tick" stroke="#333333" stroke-width="1" d="M 646.5 281 L 646.5 291" opacity="1"></path><path fill="none" class="highcharts-tick" stroke="#333333" stroke-width="1" d="M 867.5 281 L 867.5 291" opacity="1"></path><path fill="none" class="highcharts-tick" stroke="#333333" stroke-width="1" d="M 1088.5 281 L 1088.5 291" opacity="1"></path><path fill="none" class="highcharts-axis-line" stroke="#333333" stroke-width="1" data-z-index="7" d="M 70 281.5 L 1102 281.5"></path></g><g class="highcharts-axis highcharts-xaxis highcharts-navigator-xaxis" data-z-index="2" aria-hidden="true"><path fill="none" class="highcharts-axis-line" stroke="#333333" stroke-width="0" data-z-index="7" d="M 70 372 L 1102 372"></path></g><g class="highcharts-axis highcharts-yaxis" data-z-index="2" aria-hidden="true"><text x="23.5625" data-z-index="7" text-anchor="middle" transform="translate(0,0) rotate(270 23.5625 168.5)" class="highcharts-axis-title" style="color: rgb(102, 102, 102); font-size: 0.8em; fill: rgb(102, 102, 102);" y="168.5">Patient Count</text><path fill="none" class="highcharts-axis-line" stroke="#333333" stroke-width="0" data-z-index="7" d="M 70 56 L 70 281"></path></g><g class="highcharts-axis highcharts-yaxis highcharts-navigator-yaxis" data-z-index="2" aria-hidden="true"><path fill="none" class="highcharts-axis-line" stroke="#333333" stroke-width="0" data-z-index="7" d="M 70 332 L 70 372"></path></g><path fill="none" class="highcharts-crosshair highcharts-crosshair-thin" data-z-index="2" stroke="#cccccc" stroke-width="1" d="M 535.5 56 L 535.5 281" style="pointer-events: none;" aria-hidden="true" visibility="hidden"></path><g class="highcharts-scrollbar" data-z-index="3" transform="translate(70,376)" aria-hidden="true"><rect fill="rgba(255, 255, 255, 0.001)" class="highcharts-scrollbar-track" rx="5" ry="5" height="10" width="1032" stroke="#cccccc" stroke-width="1" x="-0.5" y="-0.5"></rect><g transform="translate(529,0)"><rect fill="#cccccc" class="highcharts-scrollbar-thumb" height="9" width="418.57281311582" rx="5" ry="5" stroke="#cccccc" stroke-width="0"></rect><path fill="none" d="M -3 2.5 L -3 6.666666666666667 M 0 2.5 L 0 6.666666666666667 M 3 2.5 L 3 6.666666666666667" class="highcharts-scrollbar-rifles" stroke="none" stroke-width="1" transform="translate(208.78640655791,0)"></path></g><g></g><g transform="translate(1032,0)"></g></g><g class="highcharts-series-group" data-z-index="3" filter="none" aria-hidden="false"><g class="highcharts-series highcharts-series-0 highcharts-spline-series highcharts-color-0" data-z-index="0.1" opacity="1" transform="translate(70,56) scale(1 1)" clip-path="url(#highcharts-0oh9q8d-15-)" aria-hidden="true"><path fill="none" d="M -86.129401645017 108 C -86.129401645017 108 -19.8265724663232 124.2 24.375313652806 126 C 68.5771997719356 127.8 90.6781428315004 126 134.88002895063 127.8 C 179.081915069758 129.6 201.182858129322 139.68000000000035 245.38474424845 147.6 C 289.58663036758196 155.52000000000032 311.68757342714804 159.47999999999965 355.88945954628 167.4 C 400.091345665408 175.31999999999962 422.19228872497206 180 466.3941748441 187.2 C 510.59606096322807 194.4 532.6970040227919 203.4 576.89889014192 203.4 C 621.1007762610479 203.4 643.2017193206119 191.51999999999998 687.40360543974 183.6 C 731.6054915588679 175.68 753.706434618432 171.71999999999997 797.90832073756 163.8 C 842.1102068566881 155.88 864.2111499162518 151.92000000000002 908.41303603538 144 C 952.614922154508 136.07999999999998 974.7158652140719 132.12000000000074 1018.9177513332 124.2 C 1063.11963745232 116.28000000000075 1129.422466631 104.4 1129.422466631 104.4" class="highcharts-graph" data-z-index="1" stroke="#2caffe" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" filter="none"></path><path fill="none" d="M -86.129401645017 108 C -86.129401645017 108 -19.8265724663232 124.2 24.375313652806 126 C 68.5771997719356 127.8 90.6781428315004 126 134.88002895063 127.8 C 179.081915069758 129.6 201.182858129322 139.68000000000035 245.38474424845 147.6 C 289.58663036758196 155.52000000000032 311.68757342714804 159.47999999999965 355.88945954628 167.4 C 400.091345665408 175.31999999999962 422.19228872497206 180 466.3941748441 187.2 C 510.59606096322807 194.4 532.6970040227919 203.4 576.89889014192 203.4 C 621.1007762610479 203.4 643.2017193206119 191.51999999999998 687.40360543974 183.6 C 731.6054915588679 175.68 753.706434618432 171.71999999999997 797.90832073756 163.8 C 842.1102068566881 155.88 864.2111499162518 151.92000000000002 908.41303603538 144 C 952.614922154508 136.07999999999998 974.7158652140719 132.12000000000074 1018.9177513332 124.2 C 1063.11963745232 116.28000000000075 1129.422466631 104.4 1129.422466631 104.4" data-z-index="2" class="highcharts-tracker-line" stroke-linecap="round" stroke-linejoin="round" stroke="rgba(192,192,192,0.0001)" stroke-width="22"></path></g><g class="highcharts-markers highcharts-series-0 highcharts-spline-series highcharts-color-0 highcharts-tracker" data-z-index="0.1" opacity="1" transform="translate(70,56) scale(1 1)" clip-path="none" aria-hidden="false" role="region" tabindex="-1" aria-label="Low Cholesterol, series 1 of 4. Line with 12 data points. Y axis, Patient Count. X axis, Time." style="outline: none;"><path fill="#2caffe" d="M 1018 126.2 A 2 2 0 1 1 1018.0019999996666 126.19999900000009 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-0" tabindex="-1" role="img" aria-label="October 2024, 56. Low Cholesterol." style="outline: none;"></path><path fill="#2caffe" d="M 908 146 A 2 2 0 1 1 908.0019999996666 145.9999990000001 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-0" tabindex="-1" role="img" aria-label="September 2024, 45. Low Cholesterol." style="outline: none;"></path><path fill="#2caffe" d="M 797 165.8 A 2 2 0 1 1 797.0019999996666 165.7999990000001 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-0" tabindex="-1" role="img" aria-label="August 2024, 34. Low Cholesterol." style="outline: none;"></path><path fill="#2caffe" d="M 687 185.6 A 2 2 0 1 1 687.0019999996666 185.59999900000008 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-0" tabindex="-1" role="img" aria-label="July 2024, 23. Low Cholesterol." style="outline: none;"></path><path fill="#2caffe" d="M 576 205.4 A 2 2 0 1 1 576.0019999996666 205.3999990000001 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-0" tabindex="-1" role="img" aria-label="June 2024, 12. Low Cholesterol." style="outline: none;"></path><path fill="#2caffe" d="M 466 189.2 A 2 2 0 1 1 466.0019999996667 189.19999900000008 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-0" tabindex="-1" role="img" aria-label="May 2024, 21. Low Cholesterol." style="outline: none;"></path><path fill="#2caffe" d="M 355 169.4 A 2 2 0 1 1 355.0019999996667 169.3999990000001 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-0" tabindex="-1" role="img" aria-label="April 2024, 32. Low Cholesterol." style="outline: none;"></path><path fill="#2caffe" d="M 245 149.6 A 2 2 0 1 1 245.00199999966668 149.59999900000008 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-0" tabindex="-1" role="img" aria-label="March 2024, 43. Low Cholesterol." style="outline: none;"></path><path fill="#2caffe" d="M 134 129.8 A 2 2 0 1 1 134.00199999966668 129.79999900000007 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-0" tabindex="-1" role="img" aria-label="February 2024, 54. Low Cholesterol." style="outline: none;"></path><path fill="#2caffe" d="M 24 128 A 2 2 0 1 1 24.00199999966667 127.99999900000009 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-0" tabindex="-1" role="img" aria-label="January 2024, 55. Low Cholesterol." style="outline: none;"></path><path fill="#2caffe" d="M 466 187.2 A 0 0 0 1 1 466 187.2 Z" class="highcharts-halo highcharts-color-0" data-z-index="-1" fill-opacity="0.25" visibility="hidden"></path></g><g class="highcharts-series highcharts-series-1 highcharts-spline-series highcharts-color-1" data-z-index="0.1" opacity="1" transform="translate(70,56) scale(1 1)" clip-path="url(#highcharts-0oh9q8d-15-)" aria-hidden="true"><path fill="none" d="M -86.129401645017 102.6 C -86.129401645017 102.6 -19.8265724663232 100.44 24.375313652806 99 C 68.5771997719356 97.56 90.6781428315004 97.20000000000003 134.88002895063 95.4 C 179.081915069758 93.60000000000004 201.182858129322 92.1599999999999 245.38474424845 90 C 289.58663036758196 87.8399999999999 311.68757342714804 86.40000000000008 355.88945954628 84.6 C 400.091345665408 82.80000000000008 422.19228872497206 82.44 466.3941748441 81 C 510.59606096322807 79.56 532.6970040227919 79.2 576.89889014192 77.4 C 621.1007762610479 75.60000000000001 643.2017193206119 74.16 687.40360543974 72 C 731.6054915588679 69.84 753.706434618432 68.39999999999999 797.90832073756 66.6 C 842.1102068566881 64.8 864.2111499162518 64.44 908.41303603538 63 C 952.614922154508 61.56 974.7158652140719 61.20000000000017 1018.9177513332 59.400000000000006 C 1063.11963745232 57.60000000000017 1129.422466631 54 1129.422466631 54" class="highcharts-graph" data-z-index="1" stroke="#544fc5" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" filter="none"></path><path fill="none" d="M -86.129401645017 102.6 C -86.129401645017 102.6 -19.8265724663232 100.44 24.375313652806 99 C 68.5771997719356 97.56 90.6781428315004 97.20000000000003 134.88002895063 95.4 C 179.081915069758 93.60000000000004 201.182858129322 92.1599999999999 245.38474424845 90 C 289.58663036758196 87.8399999999999 311.68757342714804 86.40000000000008 355.88945954628 84.6 C 400.091345665408 82.80000000000008 422.19228872497206 82.44 466.3941748441 81 C 510.59606096322807 79.56 532.6970040227919 79.2 576.89889014192 77.4 C 621.1007762610479 75.60000000000001 643.2017193206119 74.16 687.40360543974 72 C 731.6054915588679 69.84 753.706434618432 68.39999999999999 797.90832073756 66.6 C 842.1102068566881 64.8 864.2111499162518 64.44 908.41303603538 63 C 952.614922154508 61.56 974.7158652140719 61.20000000000017 1018.9177513332 59.400000000000006 C 1063.11963745232 57.60000000000017 1129.422466631 54 1129.422466631 54" data-z-index="2" class="highcharts-tracker-line" stroke-linecap="round" stroke-linejoin="round" stroke="rgba(192,192,192,0.0001)" stroke-width="22"></path></g><g class="highcharts-markers highcharts-series-1 highcharts-spline-series highcharts-color-1 highcharts-tracker" data-z-index="0.1" opacity="1" transform="translate(70,56) scale(1 1)" clip-path="none" aria-hidden="false" role="region" tabindex="-1" aria-label="Normal Cholesterol, series 2 of 4. Line with 12 data points. Y axis, Patient Count. X axis, Time." style="outline: none;"><path fill="#544fc5" d="M 1018 57.400000000000006 L 1020 59.400000000000006 L 1018 61.400000000000006 L 1016 59.400000000000006 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-1" tabindex="-1" role="img" aria-label="October 2024, 92. Normal Cholesterol." style="outline: none;"></path><path fill="#544fc5" d="M 908 61 L 910 63 L 908 65 L 906 63 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-1" tabindex="-1" role="img" aria-label="September 2024, 90. Normal Cholesterol." style="outline: none;"></path><path fill="#544fc5" d="M 797 64.6 L 799 66.6 L 797 68.6 L 795 66.6 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-1" tabindex="-1" role="img" aria-label="August 2024, 88. Normal Cholesterol." style="outline: none;"></path><path fill="#544fc5" d="M 687 70 L 689 72 L 687 74 L 685 72 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-1" tabindex="-1" role="img" aria-label="July 2024, 85. Normal Cholesterol." style="outline: none;"></path><path fill="#544fc5" d="M 576 75.4 L 578 77.4 L 576 79.4 L 574 77.4 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-1" tabindex="-1" role="img" aria-label="June 2024, 82. Normal Cholesterol." style="outline: none;"></path><path fill="#544fc5" d="M 466 79 L 468 81 L 466 83 L 464 81 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-1" tabindex="-1" role="img" aria-label="May 2024, 80. Normal Cholesterol." style="outline: none;"></path><path fill="#544fc5" d="M 355 82.6 L 357 84.6 L 355 86.6 L 353 84.6 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-1" tabindex="-1" role="img" aria-label="April 2024, 78. Normal Cholesterol." style="outline: none;"></path><path fill="#544fc5" d="M 245 88 L 247 90 L 245 92 L 243 90 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-1" tabindex="-1" role="img" aria-label="March 2024, 75. Normal Cholesterol." style="outline: none;"></path><path fill="#544fc5" d="M 134 93.4 L 136 95.4 L 134 97.4 L 132 95.4 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-1" tabindex="-1" role="img" aria-label="February 2024, 72. Normal Cholesterol." style="outline: none;"></path><path fill="#544fc5" d="M 24 97 L 26 99 L 24 101 L 22 99 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-1" tabindex="-1" role="img" aria-label="January 2024, 70. Normal Cholesterol." style="outline: none;"></path><path fill="#544fc5" d="M 466 81 A 0 0 0 1 1 466 81 Z" class="highcharts-halo highcharts-color-1" data-z-index="-1" fill-opacity="0.25" visibility="hidden"></path></g><g class="highcharts-series highcharts-series-2 highcharts-spline-series highcharts-color-2" data-z-index="0.1" opacity="1" transform="translate(70,56) scale(1 1)" clip-path="url(#highcharts-0oh9q8d-15-)" aria-hidden="true"><path fill="none" d="M -86.129401645017 88.19999999999999 C -86.129401645017 88.19999999999999 -19.8265724663232 108.7200000000001 24.375313652806 127.8 C 68.5771997719356 146.88000000000008 90.6781428315004 183.6 134.88002895063 183.6 C 179.081915069758 183.6 201.182858129322 159.11999999999932 245.38474424845 144 C 289.58663036758196 128.8799999999993 311.68757342714804 108 355.88945954628 108 C 400.091345665408 108 422.19228872497206 147.6 466.3941748441 147.6 C 510.59606096322807 147.6 532.6970040227919 139.68 576.89889014192 127.8 C 621.1007762610479 115.92000000000003 643.2017193206119 100.08 687.40360543974 88.19999999999999 C 731.6054915588679 76.32000000000001 753.706434618432 76.32 797.90832073756 68.4 C 842.1102068566881 60.47999999999998 864.2111499162518 48.599999999999994 908.41303603538 48.599999999999994 C 952.614922154508 48.599999999999994 974.7158652140719 56.51999999999888 1018.9177513332 68.4 C 1063.11963745232 80.27999999999889 1129.422466631 108 1129.422466631 108" class="highcharts-graph" data-z-index="1" stroke="#00e272" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" filter="none"></path><path fill="none" d="M -86.129401645017 88.19999999999999 C -86.129401645017 88.19999999999999 -19.8265724663232 108.7200000000001 24.375313652806 127.8 C 68.5771997719356 146.88000000000008 90.6781428315004 183.6 134.88002895063 183.6 C 179.081915069758 183.6 201.182858129322 159.11999999999932 245.38474424845 144 C 289.58663036758196 128.8799999999993 311.68757342714804 108 355.88945954628 108 C 400.091345665408 108 422.19228872497206 147.6 466.3941748441 147.6 C 510.59606096322807 147.6 532.6970040227919 139.68 576.89889014192 127.8 C 621.1007762610479 115.92000000000003 643.2017193206119 100.08 687.40360543974 88.19999999999999 C 731.6054915588679 76.32000000000001 753.706434618432 76.32 797.90832073756 68.4 C 842.1102068566881 60.47999999999998 864.2111499162518 48.599999999999994 908.41303603538 48.599999999999994 C 952.614922154508 48.599999999999994 974.7158652140719 56.51999999999888 1018.9177513332 68.4 C 1063.11963745232 80.27999999999889 1129.422466631 108 1129.422466631 108" data-z-index="2" class="highcharts-tracker-line" stroke-linecap="round" stroke-linejoin="round" stroke="rgba(192,192,192,0.0001)" stroke-width="22"></path></g><g class="highcharts-markers highcharts-series-2 highcharts-spline-series highcharts-color-2 highcharts-tracker" data-z-index="0.1" opacity="1" transform="translate(70,56) scale(1 1)" clip-path="none" aria-hidden="false" role="region" tabindex="-1" aria-label="High Cholesterol, series 3 of 4. Line with 12 data points. Y axis, Patient Count. X axis, Time." style="outline: none;"><path fill="#00e272" d="M 1016 66.4 L 1020 66.4 L 1020 70.4 L 1016 70.4 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-2" tabindex="-1" role="img" aria-label="October 2024, 87. High Cholesterol." style="outline: none;"></path><path fill="#00e272" d="M 906 46.599999999999994 L 910 46.599999999999994 L 910 50.599999999999994 L 906 50.599999999999994 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-2" tabindex="-1" role="img" aria-label="September 2024, 98. High Cholesterol." style="outline: none;"></path><path fill="#00e272" d="M 795 66.4 L 799 66.4 L 799 70.4 L 795 70.4 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-2" tabindex="-1" role="img" aria-label="August 2024, 87. High Cholesterol." style="outline: none;"></path><path fill="#00e272" d="M 685 86.19999999999999 L 689 86.19999999999999 L 689 90.19999999999999 L 685 90.19999999999999 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-2" tabindex="-1" role="img" aria-label="July 2024, 76. High Cholesterol." style="outline: none;"></path><path fill="#00e272" d="M 574 125.8 L 578 125.8 L 578 129.8 L 574 129.8 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-2" tabindex="-1" role="img" aria-label="June 2024, 54. High Cholesterol." style="outline: none;"></path><path fill="#00e272" d="M 464 145.6 L 468 145.6 L 468 149.6 L 464 149.6 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-2" tabindex="-1" role="img" aria-label="May 2024, 43. High Cholesterol." style="outline: none;"></path><path fill="#00e272" d="M 353 106 L 357 106 L 357 110 L 353 110 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-2" tabindex="-1" role="img" aria-label="April 2024, 65. High Cholesterol." style="outline: none;"></path><path fill="#00e272" d="M 243 142 L 247 142 L 247 146 L 243 146 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-2" tabindex="-1" role="img" aria-label="March 2024, 45. High Cholesterol." style="outline: none;"></path><path fill="#00e272" d="M 132 181.6 L 136 181.6 L 136 185.6 L 132 185.6 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-2" tabindex="-1" role="img" aria-label="February 2024, 23. High Cholesterol." style="outline: none;"></path><path fill="#00e272" d="M 22 125.8 L 26 125.8 L 26 129.8 L 22 129.8 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point highcharts-color-2" tabindex="-1" role="img" aria-label="January 2024, 54. High Cholesterol." style="outline: none;"></path><path fill="#00e272" d="M 466 147.6 A 0 0 0 1 1 466 147.6 Z" class="highcharts-halo highcharts-color-2" data-z-index="-1" fill-opacity="0.25" visibility="hidden"></path></g><g class="highcharts-series highcharts-series-3 highcharts-areaspline-series highcharts-navigator-series" data-z-index="0.1" opacity="1" transform="translate(70,332) scale(1 1)" clip-path="url(#highcharts-0oh9q8d-119-)" aria-hidden="true"><path fill="#2caffe" d="M 0 32.8352490421456 C 0 32.8352490421456 26.921739130435203 30.306513409961322 44.869565217392 28.620689655172 C 62.8173913043488 26.934865900382682 71.79130434782721 26.09195402298831 89.739130434784 24.406130268199 C 107.68695652173842 22.720306513409913 116.6608695652156 21.877394636015126 134.60869565217 20.191570881226 C 152.556521739126 18.505747126436724 161.530434782604 17.66283524904201 179.47826086956 15.977011494252999 C 197.42608695651998 14.29118773946361 206.4 13.448275862069389 224.34782608696 11.762452107280001 C 242.295652173916 10.076628352490989 251.269565217394 9.233716475096397 269.21739130435 7.547892720306997 C 287.16521739130593 5.862068965517599 296.13913043478397 3.3333333333330017 314.08695652174 3.3333333333330017 C 332.034782608696 3.3333333333330017 341.00869565217397 7.164750957853997 358.95652173913 7.164750957853997 C 376.904347826086 7.164750957853997 385.87826086956403 3.7164750957850003 403.82608695652 3.7164750957850003 C 421.773913043476 3.7164750957850003 430.747826086954 9.616858237548279 448.69565217391 12.145593869732 C 466.64347826087 14.674329501916281 475.61739130435 14.750957854405845 493.56521739131 16.360153256705 C 511.5130434782621 17.969348659003447 520.486956521738 19.808429118773997 538.43478260869 20.191570881226 C 556.38260869565 20.574712643678 565.35652173913 20.191570881226 583.30434782609 20.574712643678 C 601.2521739130459 20.957854406130004 610.226086956524 23.103448275861602 628.17391304348 24.789272030651 C 646.121739130436 26.475095785440406 655.0956521739139 27.318007662835658 673.04347826087 29.003831417625 C 690.991304347826 30.689655172414344 699.9652173913039 31.685823754789354 717.91304347826 33.2183908045977 C 735.8608695652159 34.75095785440604 744.834782608694 36.6666666666667 762.78260869565 36.6666666666667 C 780.7304347826059 36.6666666666667 789.704347826084 34.13793103448265 807.65217391304 32.4521072796935 C 825.6 30.76628352490397 834.57391304348 29.92337164750949 852.52173913044 28.237547892720002 C 870.4695652173959 26.55172413793089 879.4434782608739 25.708812260536202 897.39130434783 24.022988505747 C 915.3391304347861 22.337164750957804 924.313043478264 21.4942528735632 942.26086956522 19.808429118774 C 960.208695652176 18.1226053639848 969.182608695654 17.279693486590197 987.13043478261 15.593869731801 C 1005.078260869566 13.908045977011799 1032 11.379310344828 1032 11.379310344828 L 1032 40 C 1032 40 1005.078260869566 40 987.13043478261 40 C 969.182608695654 40 960.208695652176 40 942.26086956522 40 C 924.313043478264 40 915.3391304347861 40 897.39130434783 40 C 879.4434782608739 40 870.4695652173959 40 852.52173913044 40 C 834.57391304348 40 825.6 40 807.65217391304 40 C 789.704347826084 40 780.7304347826059 40 762.78260869565 40 C 744.834782608694 40 735.8608695652159 40 717.91304347826 40 C 699.9652173913039 40 690.991304347826 40 673.04347826087 40 C 655.0956521739139 40 646.121739130436 40 628.17391304348 40 C 610.226086956524 40 601.2521739130459 40 583.30434782609 40 C 565.35652173913 40 556.38260869565 40 538.43478260869 40 C 520.486956521738 40 511.5130434782621 40 493.56521739131 40 C 475.61739130435 40 466.64347826087 40 448.69565217391 40 C 430.747826086954 40 421.773913043476 40 403.82608695652 40 C 385.87826086956403 40 376.904347826086 40 358.95652173913 40 C 341.00869565217397 40 332.034782608696 40 314.08695652174 40 C 296.13913043478397 40 287.16521739130593 40 269.21739130435 40 C 251.269565217394 40 242.295652173916 40 224.34782608696 40 C 206.4 40 197.42608695651998 40 179.47826086956 40 C 161.530434782604 40 152.556521739126 40 134.60869565217 40 C 116.6608695652156 40 107.68695652173842 40 89.739130434784 40 C 71.79130434782721 40 62.8173913043488 40 44.869565217392 40 C 26.921739130435203 40 0 40 0 40 Z" class="highcharts-area" data-z-index="0" fill-opacity="0.05" style="pointer-events: none;"></path><path fill="none" d="M 0 32.8352490421456 C 0 32.8352490421456 26.921739130435203 30.306513409961322 44.869565217392 28.620689655172 C 62.8173913043488 26.934865900382682 71.79130434782721 26.09195402298831 89.739130434784 24.406130268199 C 107.68695652173842 22.720306513409913 116.6608695652156 21.877394636015126 134.60869565217 20.191570881226 C 152.556521739126 18.505747126436724 161.530434782604 17.66283524904201 179.47826086956 15.977011494252999 C 197.42608695651998 14.29118773946361 206.4 13.448275862069389 224.34782608696 11.762452107280001 C 242.295652173916 10.076628352490989 251.269565217394 9.233716475096397 269.21739130435 7.547892720306997 C 287.16521739130593 5.862068965517599 296.13913043478397 3.3333333333330017 314.08695652174 3.3333333333330017 C 332.034782608696 3.3333333333330017 341.00869565217397 7.164750957853997 358.95652173913 7.164750957853997 C 376.904347826086 7.164750957853997 385.87826086956403 3.7164750957850003 403.82608695652 3.7164750957850003 C 421.773913043476 3.7164750957850003 430.747826086954 9.616858237548279 448.69565217391 12.145593869732 C 466.64347826087 14.674329501916281 475.61739130435 14.750957854405845 493.56521739131 16.360153256705 C 511.5130434782621 17.969348659003447 520.486956521738 19.808429118773997 538.43478260869 20.191570881226 C 556.38260869565 20.574712643678 565.35652173913 20.191570881226 583.30434782609 20.574712643678 C 601.2521739130459 20.957854406130004 610.226086956524 23.103448275861602 628.17391304348 24.789272030651 C 646.121739130436 26.475095785440406 655.0956521739139 27.318007662835658 673.04347826087 29.003831417625 C 690.991304347826 30.689655172414344 699.9652173913039 31.685823754789354 717.91304347826 33.2183908045977 C 735.8608695652159 34.75095785440604 744.834782608694 36.6666666666667 762.78260869565 36.6666666666667 C 780.7304347826059 36.6666666666667 789.704347826084 34.13793103448265 807.65217391304 32.4521072796935 C 825.6 30.76628352490397 834.57391304348 29.92337164750949 852.52173913044 28.237547892720002 C 870.4695652173959 26.55172413793089 879.4434782608739 25.708812260536202 897.39130434783 24.022988505747 C 915.3391304347861 22.337164750957804 924.313043478264 21.4942528735632 942.26086956522 19.808429118774 C 960.208695652176 18.1226053639848 969.182608695654 17.279693486590197 987.13043478261 15.593869731801 C 1005.078260869566 13.908045977011799 1032 11.379310344828 1032 11.379310344828" class="highcharts-graph" data-z-index="1" stroke="#2caffe" stroke-width="1" stroke-linejoin="round" stroke-linecap="round" filter="none"></path></g><g class="highcharts-markers highcharts-series-3 highcharts-areaspline-series highcharts-navigator-series" data-z-index="0.1" opacity="1" transform="translate(70,332) scale(1 1)" clip-path="none" aria-hidden="false" role="region" tabindex="-1" aria-label="Navigator 1, series 4 of 4 with 24 data points. Y axis, navigator-y-axis. X axis, navigator-x-axis." style="outline: none;"><path fill="#2caffe" d="M 0 30.8352490421456 L 2 34.8352490421456 L -2 34.8352490421456 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point" tabindex="-1" role="img" aria-label="January 2023, 22. Navigator 1." style="outline: none;"></path><path fill="#2caffe" d="M 44 26.620689655172 L 46 30.620689655172 L 42 30.620689655172 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point" tabindex="-1" role="img" aria-label="February 2023, 33. Navigator 1." style="outline: none;"></path><path fill="#2caffe" d="M 89 22.406130268199 L 91 26.406130268199 L 87 26.406130268199 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point" tabindex="-1" role="img" aria-label="March 2023, 44. Navigator 1." style="outline: none;"></path><path fill="#2caffe" d="M 134 18.191570881226 L 136 22.191570881226 L 132 22.191570881226 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point" tabindex="-1" role="img" aria-label="April 2023, 55. Navigator 1." style="outline: none;"></path><path fill="#2caffe" d="M 179 13.977011494252999 L 181 17.977011494253 L 177 17.977011494253 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point" tabindex="-1" role="img" aria-label="May 2023, 66. Navigator 1." style="outline: none;"></path><path fill="#2caffe" d="M 224 9.762452107280001 L 226 13.762452107280001 L 222 13.762452107280001 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point" tabindex="-1" role="img" aria-label="June 2023, 77. Navigator 1." style="outline: none;"></path><path fill="#2caffe" d="M 269 5.547892720306997 L 271 9.547892720306997 L 267 9.547892720306997 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point" tabindex="-1" role="img" aria-label="July 2023, 88. Navigator 1." style="outline: none;"></path><path fill="#2caffe" d="M 314 1.3333333333330017 L 316 5.333333333333002 L 312 5.333333333333002 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point" tabindex="-1" role="img" aria-label="August 2023, 99. Navigator 1." style="outline: none;"></path><path fill="#2caffe" d="M 358 5.164750957853997 L 360 9.164750957853997 L 356 9.164750957853997 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point" tabindex="-1" role="img" aria-label="September 2023, 89. Navigator 1." style="outline: none;"></path><path fill="#2caffe" d="M 403 1.7164750957850003 L 405 5.716475095785 L 401 5.716475095785 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point" tabindex="-1" role="img" aria-label="October 2023, 98. Navigator 1." style="outline: none;"></path><path fill="#2caffe" d="M 448 10.145593869732 L 450 14.145593869732 L 446 14.145593869732 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point" tabindex="-1" role="img" aria-label="November 2023, 76. Navigator 1." style="outline: none;"></path><path fill="#2caffe" d="M 493 14.360153256705 L 495 18.360153256705 L 491 18.360153256705 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point" tabindex="-1" role="img" aria-label="December 2023, 65. Navigator 1." style="outline: none;"></path><path fill="#2caffe" d="M 538 18.191570881226 L 540 22.191570881226 L 536 22.191570881226 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point" tabindex="-1" role="img" aria-label="January 2024, 55. Navigator 1." style="outline: none;"></path><path fill="#2caffe" d="M 583 18.574712643678 L 585 22.574712643678 L 581 22.574712643678 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point" tabindex="-1" role="img" aria-label="February 2024, 54. Navigator 1." style="outline: none;"></path><path fill="#2caffe" d="M 628 22.789272030651 L 630 26.789272030651 L 626 26.789272030651 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point" tabindex="-1" role="img" aria-label="March 2024, 43. Navigator 1." style="outline: none;"></path><path fill="#2caffe" d="M 673 27.003831417625 L 675 31.003831417625 L 671 31.003831417625 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point" tabindex="-1" role="img" aria-label="April 2024, 32. Navigator 1." style="outline: none;"></path><path fill="#2caffe" d="M 717 31.218390804597703 L 719 35.2183908045977 L 715 35.2183908045977 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point" tabindex="-1" role="img" aria-label="May 2024, 21. Navigator 1." style="outline: none;"></path><path fill="#2caffe" d="M 762 34.6666666666667 L 764 38.6666666666667 L 760 38.6666666666667 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point" tabindex="-1" role="img" aria-label="June 2024, 12. Navigator 1." style="outline: none;"></path><path fill="#2caffe" d="M 807 30.4521072796935 L 809 34.4521072796935 L 805 34.4521072796935 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point" tabindex="-1" role="img" aria-label="July 2024, 23. Navigator 1." style="outline: none;"></path><path fill="#2caffe" d="M 852 26.237547892720002 L 854 30.237547892720002 L 850 30.237547892720002 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point" tabindex="-1" role="img" aria-label="August 2024, 34. Navigator 1." style="outline: none;"></path><path fill="#2caffe" d="M 897 22.022988505747 L 899 26.022988505747 L 895 26.022988505747 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point" tabindex="-1" role="img" aria-label="September 2024, 45. Navigator 1." style="outline: none;"></path><path fill="#2caffe" d="M 942 17.808429118774 L 944 21.808429118774 L 940 21.808429118774 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point" tabindex="-1" role="img" aria-label="October 2024, 56. Navigator 1." style="outline: none;"></path><path fill="#2caffe" d="M 987 13.593869731801 L 989 17.593869731801 L 985 17.593869731801 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point" tabindex="-1" role="img" aria-label="November 2024, 67. Navigator 1." style="outline: none;"></path><path fill="#2caffe" d="M 1032 9.379310344828 L 1034 13.379310344828 L 1030 13.379310344828 Z" stroke="#ffffff" stroke-width="0" opacity="0" class="highcharts-point" tabindex="-1" role="img" aria-label="December 2024, 78. Navigator 1." style="outline: none;"></path></g></g><g class="highcharts-exporting-group" data-z-index="3" aria-hidden="true"><g class="highcharts-no-tooltip highcharts-button highcharts-contextbutton highcharts-button-normal" stroke-linecap="round" style="cursor: pointer;" transform="translate(1074,10)"><title>Chart context menu</title><rect fill="#ffffff" class="highcharts-button-box" x="0.5" y="0.5" width="28" height="28" rx="2" ry="2" stroke="none" stroke-width="1"></rect><path fill="#666666" d="M 8 9.5 L 22 9.5 M 8 14.5 L 22 14.5 M 8 19.5 L 22 19.5" class="highcharts-button-symbol" data-z-index="1" stroke="#666666" stroke-width="3"></path><text x="0" data-z-index="1" y="18.5" style="color: rgb(51, 51, 51); font-size: 0.8em; font-weight: normal; fill: rgb(51, 51, 51);"></text></g></g><text x="556" text-anchor="middle" class="highcharts-title" data-z-index="4" style="font-size: 1em; color: rgb(51, 51, 51); font-weight: bold; fill: rgb(51, 51, 51);" y="22" aria-hidden="true">Cholesterol Levels of Patients</text><text x="556" text-anchor="middle" class="highcharts-subtitle" data-z-index="4" style="color: rgb(102, 102, 102); font-size: 0.8em; fill: rgb(102, 102, 102);" y="42" aria-hidden="true"></text><text x="10" text-anchor="start" class="highcharts-caption" data-z-index="4" style="color: rgb(102, 102, 102); font-size: 0.8em; fill: rgb(102, 102, 102);" y="397" aria-hidden="true"></text><g class="highcharts-axis-labels highcharts-xaxis-labels" data-z-index="7" aria-hidden="true"><text x="536.3941748441" style="color: rgb(51, 51, 51); cursor: default; font-size: 0.8em; fill: rgb(51, 51, 51);" text-anchor="middle" transform="translate(0,0)" y="308" opacity="1">May 2024</text><text x="757.40360543974" style="color: rgb(51, 51, 51); cursor: default; font-size: 0.8em; fill: rgb(51, 51, 51);" text-anchor="middle" transform="translate(0,0)" y="308" opacity="1">Jul 2024</text><text x="978.41303603538" style="color: rgb(51, 51, 51); cursor: default; font-size: 0.8em; fill: rgb(51, 51, 51);" text-anchor="middle" transform="translate(0,0)" y="308" opacity="1">Sep 2024</text><text x="315.38474424845" style="color: rgb(51, 51, 51); cursor: default; font-size: 0.8em; fill: rgb(51, 51, 51);" text-anchor="middle" transform="translate(0,0)" y="308" opacity="1">Mar 2024</text><text x="94.375313652806" style="color: rgb(51, 51, 51); cursor: default; font-size: 0.8em; fill: rgb(51, 51, 51);" text-anchor="middle" transform="translate(0,0)" y="308" opacity="1">Jan 2024</text><text x="204.88002895063" style="color: rgb(51, 51, 51); cursor: default; font-size: 0.8em; fill: rgb(51, 51, 51);" text-anchor="middle" transform="translate(0,0)" y="308" opacity="1">Feb 2024</text><text x="425.88945954628" style="color: rgb(51, 51, 51); cursor: default; font-size: 0.8em; fill: rgb(51, 51, 51);" text-anchor="middle" transform="translate(0,0)" y="308" opacity="1">Apr 2024</text><text x="646.89889014192" style="color: rgb(51, 51, 51); cursor: default; font-size: 0.8em; fill: rgb(51, 51, 51);" text-anchor="middle" transform="translate(0,0)" y="308" opacity="1">Jun 2024</text><text x="867.90832073756" style="color: rgb(51, 51, 51); cursor: default; font-size: 0.8em; fill: rgb(51, 51, 51);" text-anchor="middle" transform="translate(0,0)" y="308" opacity="1">Aug 2024</text><text x="1075.9874992370605" style="color: rgb(51, 51, 51); cursor: default; font-size: 0.8em; fill: rgb(51, 51, 51);" text-anchor="middle" transform="translate(0,0)" y="308" opacity="1">Oct 2024</text></g><g class="highcharts-axis-labels highcharts-xaxis-labels highcharts-navigator-xaxis" data-z-index="7" aria-hidden="true"><text x="73" style="color: rgb(0, 0, 0); cursor: default; font-size: 0.7em; opacity: 0.6; fill: rgb(0, 0, 0);" text-anchor="start" transform="translate(0,0)" y="368" opacity="1"><tspan class="highcharts-text-outline" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="4px" stroke-linejoin="round" style="">2023<tspan x="73" dy="0">​</tspan></tspan>2023</text><text x="611.43478260869" style="color: rgb(0, 0, 0); cursor: default; font-size: 0.7em; opacity: 0.6; fill: rgb(0, 0, 0);" text-anchor="start" transform="translate(0,0)" y="368" opacity="1"><tspan class="highcharts-text-outline" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="4px" stroke-linejoin="round">2024<tspan x="611.43478260869" dy="0">​</tspan></tspan>2024</text></g><g class="highcharts-axis-labels highcharts-yaxis-labels" data-z-index="7" aria-hidden="true"><text x="55" style="color: rgb(51, 51, 51); cursor: default; font-size: 0.8em; fill: rgb(51, 51, 51);" text-anchor="end" transform="translate(0,0)" y="279" opacity="1">0</text><text x="55" style="color: rgb(51, 51, 51); cursor: default; font-size: 0.8em; fill: rgb(51, 51, 51);" text-anchor="end" transform="translate(0,0)" y="99" opacity="1">100</text><text x="55" style="color: rgb(51, 51, 51); cursor: default; font-size: 0.8em; fill: rgb(51, 51, 51);" text-anchor="end" transform="translate(0,0)" y="234" opacity="1">25</text><text x="55" style="color: rgb(51, 51, 51); cursor: default; font-size: 0.8em; fill: rgb(51, 51, 51);" text-anchor="end" transform="translate(0,0)" y="189" opacity="1">50</text><text x="55" style="color: rgb(51, 51, 51); cursor: default; font-size: 0.8em; fill: rgb(51, 51, 51);" text-anchor="end" transform="translate(0,0)" y="144" opacity="1">75</text><text x="0" style="color: rgb(51, 51, 51); cursor: default; font-size: 0.8em; fill: rgb(51, 51, 51);" text-anchor="end" transform="translate(0,0)" visibility="hidden">125</text></g><g class="highcharts-axis-labels highcharts-yaxis-labels highcharts-navigator-yaxis" data-z-index="7" aria-hidden="true"></g><g class="highcharts-range-selector-group" data-z-index="7" transform="translate(0,33)" aria-hidden="false"><g class="highcharts-range-selector-buttons" transform="translate(0,10)" aria-hidden="false"><g class="highcharts-label" transform="translate(70,0)" aria-hidden="true"><text x="0" data-z-index="1" y="15.5" style="color: rgb(102, 102, 102); font-size: 0.8em; fill: rgb(102, 102, 102);">Zoom</text></g><g class="highcharts-no-tooltip highcharts-button highcharts-button-disabled" data-z-index="7" style="cursor: pointer;" transform="translate(108,0)" aria-hidden="false" tabindex="-1" role="button"><title>View 1 month</title><rect fill="#f7f7f7" class="highcharts-button-box" x="0" y="0" width="32" height="22" rx="2" ry="2" stroke-width="0" stroke="#cccccc"></rect><text x="7.106249809265137" data-z-index="1" y="15.5" style="color: rgb(204, 204, 204); font-size: 0.8em; font-weight: normal; fill: rgb(204, 204, 204);">1m</text></g><g class="highcharts-no-tooltip highcharts-button highcharts-button-disabled" data-z-index="7" style="cursor: pointer;" transform="translate(145,0)" aria-hidden="false" tabindex="-1" role="button"><title>View 3 months</title><rect fill="#f7f7f7" class="highcharts-button-box" x="0" y="0" width="32" height="22" rx="2" ry="2" stroke-width="0" stroke="#cccccc"></rect><text x="7.106249809265137" data-z-index="1" y="15.5" style="color: rgb(204, 204, 204); font-size: 0.8em; font-weight: normal; fill: rgb(204, 204, 204);">3m</text></g><g class="highcharts-no-tooltip highcharts-button highcharts-button-normal" data-z-index="7" style="cursor: pointer;" transform="translate(182,0)" aria-hidden="false" tabindex="-1" role="button"><title>View 6 months</title><rect fill="#f7f7f7" class="highcharts-button-box" x="0" y="0" width="32" height="22" rx="2" ry="2" stroke-width="0" stroke="#cccccc"></rect><text x="7.106249809265137" data-z-index="1" y="15.5" style="color: rgb(51, 51, 51); font-size: 0.8em; font-weight: normal; fill: rgb(51, 51, 51);">6m</text></g><g class="highcharts-no-tooltip highcharts-button highcharts-button-normal" data-z-index="7" style="cursor: pointer;" transform="translate(219,0)" aria-hidden="false" tabindex="-1" role="button"><title>View year to date</title><rect fill="#f7f7f7" class="highcharts-button-box" x="0" y="0" width="32" height="22" rx="2" ry="2" stroke-width="0" stroke="#cccccc"></rect><text x="2.8000001907348633" data-z-index="1" y="15.5" style="color: rgb(51, 51, 51); font-size: 0.8em; font-weight: normal; fill: rgb(51, 51, 51);">YTD</text></g><g class="highcharts-no-tooltip highcharts-button highcharts-button-normal" data-z-index="7" style="cursor: pointer;" transform="translate(256,0)" aria-hidden="false" tabindex="-1" role="button"><title>View 1 year</title><rect fill="#f7f7f7" class="highcharts-button-box" x="0" y="0" width="32" height="22" rx="2" ry="2" stroke-width="0" stroke="#cccccc"></rect><text x="8.840624809265137" data-z-index="1" y="15.5" style="color: rgb(51, 51, 51); font-size: 0.8em; font-weight: normal; fill: rgb(51, 51, 51);">1y</text></g><g class="highcharts-no-tooltip highcharts-button highcharts-button-normal" data-z-index="7" style="cursor: pointer;" transform="translate(293,0)" aria-hidden="false" tabindex="-1" role="button"><title>View all</title><rect fill="#f7f7f7" class="highcharts-button-box" x="0" y="0" width="32" height="22" rx="2" ry="2" stroke-width="0" stroke="#cccccc"></rect><text x="8.487499713897705" data-z-index="1" y="15.5" style="color: rgb(51, 51, 51); font-size: 0.8em; font-weight: normal; fill: rgb(51, 51, 51);">All</text></g></g><g class="highcharts-input-group" transform="translate(930,10)" aria-hidden="true"><g class="highcharts-label highcharts-range-label" transform="translate(0,0)"><text x="0" data-z-index="1" y="12" style="color: rgb(102, 102, 102); font-family: Helvetica, Arial, sans-serif; font-size: 0.8em; fill: rgb(102, 102, 102);"></text></g><g class="highcharts-label highcharts-range-input" transform="translate(0,0)" style="cursor: pointer;"><rect fill="none" class="highcharts-label-box" x="0.5" y="0.5" width="77" height="21" stroke="none" stroke-width="1"></rect><text x="2" data-z-index="1" y="15" style="color: rgb(51, 78, 255); font-family: Helvetica, Arial, sans-serif; font-size: 0.8em; fill: rgb(51, 78, 255);">25 Dec 2023</text></g><g class="highcharts-label highcharts-range-label" transform="translate(82,0)"><text x="2" data-z-index="1" y="15" style="color: rgb(102, 102, 102); font-family: Helvetica, Arial, sans-serif; font-size: 0.8em; fill: rgb(102, 102, 102);">→</text></g><g class="highcharts-label highcharts-range-input" transform="translate(103,0)" style="cursor: pointer;"><rect fill="none" class="highcharts-label-box" x="0.5" y="0.5" width="67" height="21" stroke="none" stroke-width="1"></rect><text x="2" data-z-index="1" y="15" style="color: rgb(51, 78, 255); font-family: Helvetica, Arial, sans-serif; font-size: 0.8em; fill: rgb(51, 78, 255);">4 Oct 2024</text></g></g></g><g class="highcharts-navigator" data-z-index="8" aria-hidden="true"><rect fill="rgba(0,0,0,0)" class="highcharts-navigator-mask-outside" x="70" y="332" width="529" height="40"></rect><rect fill="rgba(102,122,255,0.3)" class="highcharts-navigator-mask-inside" style="cursor: ew-resize;" x="599" y="332" width="419" height="40"></rect><rect fill="rgba(0,0,0,0)" class="highcharts-navigator-mask-outside" x="1018" y="332" width="84" height="40"></rect><path fill="none" class="highcharts-navigator-outline" stroke-width="1" stroke="#999999" d="M 70 331.5 L 598.5 331.5 L 598.5 372 M 1017.5 372 L 1017.5 331.5 L 1102 332.5 M 598 331.5 L 1018 331.5"></path><path fill="#f2f2f2" d="M -4.5 0.5 L 3.5 0.5 L 3.5 15.5 L -4.5 15.5 L -4.5 0.5 M -1.5 4 L -1.5 12 M 0.5 4 L 0.5 12" data-z-index="6" class="highcharts-navigator-handle highcharts-navigator-handle-right" stroke="#999999" stroke-width="1" style="cursor: ew-resize;" transform="translate(1018,344)"></path><path fill="#f2f2f2" d="M -4.5 0.5 L 3.5 0.5 L 3.5 15.5 L -4.5 15.5 L -4.5 0.5 M -1.5 4 L -1.5 12 M 0.5 4 L 0.5 12" data-z-index="7" class="highcharts-navigator-handle highcharts-navigator-handle-left" stroke="#999999" stroke-width="1" style="cursor: ew-resize;" transform="translate(599,344)"></path></g><text x="1102" class="highcharts-credits" text-anchor="end" data-z-index="8" y="395" style="cursor: pointer; color: rgb(153, 153, 153); font-size: 0.6em; fill: rgb(153, 153, 153);" aria-label="Chart credits: Highcharts.com" aria-hidden="false">Highcharts.com</text><g class="highcharts-tooltip" data-z-index="8" filter="url(#highcharts-drop-shadow-0)" opacity="0" aria-hidden="true" visibility="hidden"><g class="highcharts-label highcharts-tooltip-header highcharts-tooltip-box" transform="translate(505,280)" style="cursor: default;"><path fill="#ffffff" class="highcharts-label-box" d="M 3.5 0.5 L 24.5 0.5 L 30.5 -5.5 L 36.5 0.5 L 59 0.5 A 3 3 0 0 1 62.5 3.5 L 62.5 25.5 A 3 3 0 0 1 59.5 28.5 L 3.5 28.5 A 3 3 0 0 1 0.5 25.5 L 0.5 3.5 A 3 3 0 0 1 3.5 0.5 Z" stroke-width="1" stroke="#333333"></path><text x="8" data-z-index="1" y="20" style="color: rgb(51, 51, 51); font-size: 0.8em; fill: rgb(51, 51, 51);"><tspan style="font-size: 0.8em;">May 2024</tspan><tspan class="highcharts-br">​</tspan></text></g><g class="highcharts-label highcharts-tooltip-box highcharts-color-0" transform="translate(379,228)" style="cursor: default;"><path fill="#ffffff" class="highcharts-label-box" d="M 3.5 0.5 L 137.5 0.5 A 3 3 0 0 1 140.5 3.5 L 140.5 9.199999999999989 L 146.5 15.199999999999989 L 140.5 21.19999999999999 L 140.5 27.5 A 3 3 0 0 1 137.5 30.5 L 3.5 30.5 A 3 3 0 0 1 0.5 27.5 L 0.5 3.5 A 3 3 0 0 1 3.5 0.5 Z" stroke-width="1" stroke="#2caffe"></path><text x="8" data-z-index="1" y="20" style="color: rgb(51, 51, 51); font-size: 0.8em; fill: rgb(51, 51, 51);"><tspan style="color: rgb(44, 175, 254); fill: rgb(44, 175, 254);">●</tspan> Low Cholesterol: <tspan style="font-weight: bold;">21</tspan><tspan class="highcharts-br">​</tspan></text></g><g class="highcharts-label highcharts-tooltip-box highcharts-color-1" transform="translate(361,122)" style="cursor: default;"><path fill="#ffffff" class="highcharts-label-box" d="M 3.5 0.5 L 155.5 0.5 A 3 3 0 0 1 158.5 3.5 L 158.5 9 L 164.5 15 L 158.5 21 L 158.5 27.5 A 3 3 0 0 1 155.5 30.5 L 3.5 30.5 A 3 3 0 0 1 0.5 27.5 L 0.5 3.5 A 3 3 0 0 1 3.5 0.5 Z" stroke-width="1" stroke="#544fc5"></path><text x="8" data-z-index="1" y="20" style="color: rgb(51, 51, 51); font-size: 0.8em; fill: rgb(51, 51, 51);"><tspan style="color: rgb(84, 79, 197); fill: rgb(84, 79, 197);">●</tspan> Normal Cholesterol: <tspan style="font-weight: bold;">80</tspan><tspan class="highcharts-br">​</tspan></text></g><g class="highcharts-label highcharts-tooltip-box highcharts-color-2" transform="translate(376,188)" style="cursor: default;"><path fill="#ffffff" class="highcharts-label-box" d="M 3.5 0.5 L 140.5 0.5 A 3 3 0 0 1 143.5 3.5 L 143.5 9.599999999999994 L 149.5 15.599999999999994 L 143.5 21.599999999999994 L 143.5 27.5 A 3 3 0 0 1 140.5 30.5 L 3.5 30.5 A 3 3 0 0 1 0.5 27.5 L 0.5 3.5 A 3 3 0 0 1 3.5 0.5 Z" stroke-width="1" stroke="#00e272"></path><text x="8" data-z-index="1" y="20" style="color: rgb(51, 51, 51); font-size: 0.8em; fill: rgb(51, 51, 51);"><tspan style="color: rgb(0, 226, 114); fill: rgb(0, 226, 114);">●</tspan> High Cholesterol: <tspan style="font-weight: bold;">43</tspan><tspan class="highcharts-br">​</tspan></text></g></g></svg><div aria-hidden="false" class="highcharts-a11y-proxy-container-after" style="top: 0px; left: 0px; white-space: nowrap; position: absolute;"><div class="highcharts-a11y-proxy-group highcharts-a11y-proxy-group-zoom"></div><div class="highcharts-a11y-proxy-group highcharts-a11y-proxy-group-navigator" role="region" aria-label="Axis zoom"><input class="highcharts-a11y-proxy-element" type="range" aria-label="Start, percent" style="border-width: 0px; background-color: transparent; cursor: pointer; outline: none; opacity: 0.001; z-index: 999; overflow: hidden; padding: 0px; margin: 0px; display: block; position: absolute; width: 8px; height: 15px; left: 595px; top: 75px; pointer-events: none;"><input class="highcharts-a11y-proxy-element" type="range" aria-label="End, percent" style="border-width: 0px; background-color: transparent; cursor: pointer; outline: none; opacity: 0.001; z-index: 999; overflow: hidden; padding: 0px; margin: 0px; display: block; position: absolute; width: 8px; height: 15px; left: 1014px; top: 75px; pointer-events: none;"></div><div class="highcharts-a11y-proxy-group highcharts-a11y-proxy-group-chartMenu"><button class="highcharts-a11y-proxy-element highcharts-no-tooltip" aria-label="View chart menu, Cholesterol Levels of Patients" aria-expanded="false" title="Chart context menu" style="border-width: 0px; background-color: transparent; cursor: pointer; outline: none; opacity: 0.001; z-index: 999; overflow: hidden; padding: 0px; margin: 0px; display: block; position: absolute; width: 28px; height: 28px; left: 1075px; top: -259px;"></button></div></div></div><div id="highcharts-screen-reader-region-after-0" aria-hidden="false" style="position: relative;"><div aria-hidden="false" style="position: absolute; width: 1px; height: 1px; overflow: hidden; white-space: nowrap; clip: rect(1px, 1px, 1px, 1px); margin-top: -3px; opacity: 0.01;"><div id="highcharts-end-of-chart-marker-0" class="highcharts-exit-anchor" tabindex="0" aria-hidden="false">End of interactive chart.</div></div></div></div>
+
+</div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <!-- Wrapper END -->
+
+      <!-- Optional JavaScript -->
+      <script src="js/jquery.min.js"></script>
+      <script src="js/popper.min.js"></script>
+      <script src="js/bootstrap.min.js"></script>
+     
+      <!-- Custom JavaScript -->
+      <script src="js/custom.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript">//<![CDATA[
+
+
+var chart1 = Highcharts.stockChart('container', {
+    chart: {
+        type: 'spline'
+    },
+        rangeSelector: {
+        selected: 4
+    },
+    title: {
+        text: 'Cholesterol Levels of Patients'
+    },
+    navigator: {
+        xAxis: {        
+       type: 'datetime',
+            labels: {
+                format: '{value:%Y}'
+            },
+            tickInterval: 365 * 24 * 3600 * 1000 
+
+    },
+    },
+    xAxis: {        
+        events: {
+            afterSetExtremes: function(e) {
+                var chart1 = Highcharts.charts[1]; // Assuming chart1 is the first chart on the page
+                if (chart1) {
+                    chart1.xAxis[0].setExtremes(e.min, e.max);
+                }
+            }
+        },
+        type: 'datetime',
+        labels: {
+            formatter: function() {
+                return Highcharts.dateFormat('%b %Y', this.value);
+            }
+        }
+
+    },
+    yAxis: {
+        title: {
+            text: 'Patient Count'
+        },
+        opposite: false
+    },
+    series: [{
+        name: 'Low Cholesterol',
+        data:[
+    [1672531200000, 22], // January 2023
+    [1675209600000, 33], // February 2023
+    [1677628800000, 44], // March 2023
+    [1680307200000, 55], // April 2023
+    [1682899200000, 66], // May 2023
+    [1685577600000, 77], // June 2023
+    [1688169600000, 88], // July 2023
+    [1690848000000, 99], // August 2023
+    [1693526400000, 89], // September 2023
+    [1696118400000, 98], // October 2023
+    [1698796800000, 76], // November 2023
+    [1701388800000, 65], // December 2023
+    [1704067200000, 55], // January 2024
+    [1706745600000, 54], // February 2024
+    [1709251200000, 43], // March 2024
+    [1711929600000, 32], // April 2024
+    [1714521600000, 21], // May 2024
+    [1717200000000, 12], // June 2024
+    [1719792000000, 23], // July 2024
+    [1722470400000, 34], // August 2024
+    [1725148800000, 45], // September 2024
+    [1727740800000, 56], // October 2024
+    [1730419200000, 67], // November 2024
+    [1733011200000, 78]  // December 2024
+]
+    }, {
+        name: 'Normal Cholesterol',
+        data: [
+      [1672531200000, 40], // January 2023
+    [1675209600000, 42], // February 2023
+    [1677628800000, 45], // March 2023
+    [1680307200000, 48], // April 2023
+    [1682899200000, 50], // May 2023
+    [1685577600000, 52], // June 2023
+    [1688169600000, 55], // July 2023
+    [1690848000000, 58], // August 2023
+    [1693526400000, 60], // September 2023
+    [1696118400000, 62], // October 2023
+    [1698796800000, 65], // November 2023
+    [1701388800000, 68], // December 2023
+    [1704067200000, 70], // January 2024
+    [1706745600000, 72], // February 2024
+    [1709251200000, 75], // March 2024
+    [1711929600000, 78], // April 2024
+    [1714521600000, 80], // May 2024
+    [1717200000000, 82], // June 2024
+    [1719792000000, 85], // July 2024
+    [1722470400000, 88], // August 2024
+    [1725148800000, 90], // September 2024
+    [1727740800000, 92], // October 2024
+    [1730419200000, 95], // November 2024
+    [1733011200000, 98]  // December 202424
+]
+    }, {
+        name: 'High Cholesterol',
+        data: [
+    [1672531200000, 32], // January 2023
+    [1675209600000, 54], // February 2023
+    [1677628800000, 24], // March 2023
+    [1680307200000, 65], // April 2023
+    [1682899200000, 72], // May 2023
+    [1685577600000, 32], // June 2023
+    [1688169600000, 45], // July 2023
+    [1690848000000, 63], // August 2023
+    [1693526400000, 72], // September 2023
+    [1696118400000, 89], // October 2023
+    [1698796800000, 25], // November 2023
+    [1701388800000, 76], // December 2023
+    [1704067200000, 54], // January 2024
+    [1706745600000, 23], // February 2024
+    [1709251200000, 45], // March 2024
+    [1711929600000, 65], // April 2024
+    [1714521600000, 43], // May 2024
+    [1717200000000, 54], // June 2024
+    [1719792000000, 76], // July 2024
+    [1722470400000, 87], // August 2024
+    [1725148800000, 98], // September 2024
+    [1727740800000, 87], // October 2024
+    [1730419200000, 65], // November 2024
+    [1733011200000, 43]  // December 2024
+]
+    }]
+});
+
+var chart2 = Highcharts.stockChart('container2', {
+    navigator: {
+        enabled: false
+    },
+        scrollbar: {
+        enabled: false
+    },
+    chart: {
+        type: 'spline'
+    },
+    title: {
+        text: 'HbA1c Levels of Patients'
+    },
+        xAxis: {
+                labels: {
+            enabled: false // Remove x-axis labels
+        },
+        lineWidth: 0,
+         tickWidth: 0,
+        // Remove categories to remove x-axis labels
+        
+    },
+
+    yAxis: {
+        title: {
+            text: 'Patient Count'
+        },
+        opposite: false
+    },
+    legend: {
+        enabled: false // Disable legend
+    },
+    series: [{
+        name: 'Low HbA1c',
+        data: [
+    [1672531200000, 32], // January 2023
+    [1675209600000, 54], // February 2023
+    [1677628800000, 24], // March 2023
+    [1680307200000, 65], // April 2023
+    [1682899200000, 72], // May 2023
+    [1685577600000, 32], // June 2023
+    [1688169600000, 45], // July 2023
+    [1690848000000, 63], // August 2023
+    [1693526400000, 72], // September 2023
+    [1696118400000, 89], // October 2023
+    [1698796800000, 25], // November 2023
+    [1701388800000, 76], // December 2023
+    [1704067200000, 54], // January 2024
+    [1706745600000, 23], // February 2024
+    [1709251200000, 45], // March 2024
+    [1711929600000, 65], // April 2024
+    [1714521600000, 43], // May 2024
+    [1717200000000, 54], // June 2024
+    [1719792000000, 76], // July 2024
+    [1722470400000, 87], // August 2024
+    [1725148800000, 98], // September 2024
+    [1727740800000, 87], // October 2024
+    [1730419200000, 65], // November 2024
+    [1733011200000, 43]  // December 2024
+]
+    }, {
+        name: 'Normal HbA1c',
+        data:  [
+    [1672531200000, 22], // January 2023
+    [1675209600000, 33], // February 2023
+    [1677628800000, 44], // March 2023
+    [1680307200000, 55], // April 2023
+    [1682899200000, 66], // May 2023
+    [1685577600000, 77], // June 2023
+    [1688169600000, 88], // July 2023
+    [1690848000000, 99], // August 2023
+    [1693526400000, 89], // September 2023
+    [1696118400000, 98], // October 2023
+    [1698796800000, 76], // November 2023
+    [1701388800000, 65], // December 2023
+    [1704067200000, 55], // January 2024
+    [1706745600000, 54], // February 2024
+    [1709251200000, 43], // March 2024
+    [1711929600000, 32], // April 2024
+    [1714521600000, 21], // May 2024
+    [1717200000000, 12], // June 2024
+    [1719792000000, 23], // July 2024
+    [1722470400000, 34], // August 2024
+    [1725148800000, 45], // September 2024
+    [1727740800000, 56], // October 2024
+    [1730419200000, 67], // November 2024
+    [1733011200000, 78]  // December 2024
+]
+    }, {
+        name: 'High HbA1c',
+        data: [
+    [1672531200000, 40], // January 2023
+    [1675209600000, 42], // February 2023
+    [1677628800000, 45], // March 2023
+    [1680307200000, 48], // April 2023
+    [1682899200000, 50], // May 2023
+    [1685577600000, 52], // June 2023
+    [1688169600000, 55], // July 2023
+    [1690848000000, 58], // August 2023
+    [1693526400000, 60], // September 2023
+    [1696118400000, 62], // October 2023
+    [1698796800000, 65], // November 2023
+    [1701388800000, 68], // December 2023
+    [1704067200000, 70], // January 2024
+    [1706745600000, 72], // February 2024
+    [1709251200000, 75], // March 2024
+    [1711929600000, 78], // April 2024
+    [1714521600000, 80], // May 2024
+    [1717200000000, 82], // June 2024
+    [1719792000000, 85], // July 2024
+    [1722470400000, 88], // August 2024
+    [1725148800000, 90], // September 2024
+    [1727740800000, 92], // October 2024
+    [1730419200000, 95], // November 2024
+    [1733011200000, 98]  // December 2024
+]
+    }],
+   rangeSelector: {
+                selected: 4 // Index of the selected range (0: All, 1: 1m, 3m, 6m, YTD, 1y)
+            }
+});
+
+
+  //]]></script>
+
+  <script>
+    // tell the embed parent frame the height of the content
+    if (window.parent && window.parent.parent){
+      window.parent.parent.postMessage(["resultsFrame", {
+        height: document.body.getBoundingClientRect().height,
+        slug: "1Ls0nq69"
+      }], "*")
+    }
+
+    // always overwrite window.name, in case users try to set it manually
+    window.name = "result"
+  </script>
+
+    <script>
+      let allLines = []
+
+      window.addEventListener("message", (message) => {
+        if (message.data.console){
+          let insert = document.querySelector("#insert")
+          allLines.push(message.data.console.payload)
+          insert.innerHTML = allLines.join(";\r")
+
+          let result = eval.call(null, message.data.console.payload)
+          if (result !== undefined){
+            console.log(result)
+          }
+        }
+      })
+    </script>
+
+
+</html>
+
